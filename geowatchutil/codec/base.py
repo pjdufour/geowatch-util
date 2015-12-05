@@ -1,7 +1,12 @@
 import json
 
 from geowatchutil.base import parse_date, FORMAT_TILE_REQUEST
-from geowatchutil.channel import GeoWatchChannelFile, GeoWatchChannelKafka, GeoWatchChannelKinesis
+from geowatchutil.channel.geowatch_channel_file import GeoWatchChannelFile
+from geowatchutil.channel.geowatch_channel_kafka import GeoWatchChannelKafka
+from geowatchutil.channel.geowatch_channel_kinesis import GeoWatchChannelKinesis
+from geowatchutil.channel.geowatch_channel_sns import GeoWatchChannelSNS
+from geowatchutil.channel.geowatch_channel_sqs import GeoWatchChannelSQS
+from geowatchutil.channel.geowatch_channel_slack import GeoWatchChannelSlack
 
 
 def decode_tile_request(a):
