@@ -1,4 +1,4 @@
-from geowatchutil.codec import GeoWatchCodec
+from geowatchutil.codec.base import GeoWatchCodec
 
 from geowatchutil.base import parse_date, FORMAT_TILE_REQUEST
 

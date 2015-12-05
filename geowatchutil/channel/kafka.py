@@ -1,4 +1,4 @@
-from geowatchutil.channel import GeoWatchChannelTopic
+from geowatchutil.channel.base import GeoWatchChannelTopic
 
 class GeoWatchChannelKafka(GeoWatchChannelTopic):
 

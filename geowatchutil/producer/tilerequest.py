@@ -1,4 +1,4 @@
-from geowatchutil.producer import GeoWatchProdcer
+from geowatchutil.producer.base import GeoWatchProdcer
 
 from geowatchutil.codec.tilerequest import GeoWatchCodecTileRequest
 

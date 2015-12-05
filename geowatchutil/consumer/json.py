@@ -1,4 +1,4 @@
-from geowatchutil.consumer import GeoWatchConsumer
+from geowatchutil.consumer.base import GeoWatchConsumer
 
 from geowatchutil.codec.json import GeoWatchCodecJSON
 

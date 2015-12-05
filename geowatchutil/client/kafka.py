@@ -1,4 +1,4 @@
-from geowatchutil.client import GeoWatchClientTopic
+from geowatchutil.client.base import GeoWatchClientTopic
 
 from kafka import KafkaClient
 

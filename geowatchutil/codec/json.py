@@ -1,4 +1,4 @@
-from geowatchutil.codec import GeoWatchCodec
+from geowatchutil.codec.base import GeoWatchCodec
 
 class GeoWatchCodecJSON(GeoWatchCodec):
 

@@ -1,6 +1,3 @@
-from kafka import SimpleProducer, MultiProcessConsumer
-
-
 class GeoWatchChannel(object):
 
     # Public

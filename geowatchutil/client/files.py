@@ -1,4 +1,4 @@
-from geowatchutil.client import GeoWatchClient
+from geowatchutil.client.base import GeoWatchClient
 
 
 class GeoWatchClientFile(GeoWatchClient):

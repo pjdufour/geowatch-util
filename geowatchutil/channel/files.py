@@ -1,4 +1,4 @@
-from geowatchutil.channel import GeoWatchChannel
+from geowatchutil.channel.base import GeoWatchChannel
 
 class GeoWatchChannelFile(GeoWatchChannel):
 
