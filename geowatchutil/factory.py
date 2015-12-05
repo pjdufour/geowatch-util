@@ -1,4 +1,4 @@
-from .client.files import GeoWatchClientFile
+from geowatchutil.client.files import GeoWatchClientFile
 from geowatchutil.client.kafka import GeoWatchClientKafka
 from geowatchutil.client.kinesis import GeoWatchClientKinesis
 from geowatchutil.consumer.plain import GeoWatchConsumerPlain
