@@ -1,7 +1,7 @@
 import datetime
 
 from geowatchutil.base import parse_date, is_expired
-from geowatchutil.channel.geowatch_channel_files import GeoWatchChannelFiles
+from geowatchutil.channel.geowatch_channel_file import GeoWatchChannelFile
 from geowatchutil.channel.geowatch_channel_kafka import GeoWatchChannelKafka
 from geowatchutil.channel.geowatch_channel_kinesis import GeoWatchChannelKinesis
 from geowatchutil.node import GeoWatchNode
