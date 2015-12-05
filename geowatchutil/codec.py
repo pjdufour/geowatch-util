@@ -41,6 +41,10 @@ class GeoWatchCodec(object):
             return GeoWatchChannelKafka.decode(message)
         elif self._channel == "kinesis":
             return GeoWatchChannelKinesis.decode(message)
+        elif self._channel == "sns":
+            return GeoWatchChannelSNS.decode(message)
+        elif self._channel == "slack":
+            return GeoWatchChannelSNS.decode(message)
         else:
             return message
 
@@ -51,6 +55,10 @@ class GeoWatchCodec(object):
             return GeoWatchChannelKafka.encode(message)
         elif self._channel == "kinesis":
             return GeoWatchChannelKinesis.encode(message)
+        elif self._channel == "sns":
+            return GeoWatchChannelSNS.encode(message)
+        elif self._channel == "slack":
+            return GeoWatchChannelSlack.encode(message)
         else:
             return message
 
@@ -59,44 +67,3 @@ class GeoWatchCodec(object):
 
     def __init__(self, channel=None):
         self._channel = channel
-
-
-class GeoWatchCodecPlain(GeoWatchCodec):
-
-    def encode(self, text=None):
-        return self.encode_channel(text)
-
-    def decode(self, text=None):
-        return self.decode_channel(text)
-
-    def __init__(self, channel=None):
-        super(GeoWatchCodecPlain, self).__init__(channel=channel)
-
-
-class GeoWatchCodecTileRequest(GeoWatchCodec):
-
-    def encode(self, tilesource=None, tiles=None, extension=None, now=None):
-        messages = []
-        for tile in tiles:
-            x, y, z = tile
-            message = FORMAT_TILE_REQUEST.format(d=now.isoformat(), tilesource=tilesource, z=str(z), x=str(x), y=str(y), ext=extension)
-            messages.append(self.encode_channel(message))
-        return messages
-
-    def decode(self):
-        pass
-
-    def __init__(self, channel=None):
-        super(GeoWatchCodecTileRequest, self).__init__(channel=channel)
-
-
-class GeoWatchCodecJSON(GeoWatchCodec):
-
-    def encode(self, data=None):
-        return self.encode_channel(json.dumps(data))
-
-    def decode(self):
-        pass
-
-    def __init__(self, channel=None):
-        super(GeoWatchCodecJSON, self).__init__(channel=channel)

@@ -31,36 +31,3 @@ class GeoWatchProducer(GeoWatchNode):
             self._channel = GeoWatchChannelKinesis(client, topic, "producer")
         elif self._client.backend == "sns":
             self._channel = GeoWatchChannelSNS(client, topic, "producer")
-
-
-class GeoWatchProducerPlain(GeoWatchProducer):
-
-    def send_text(self, text, now=None):
-        # now = assert_now(now)
-        message = self._codec.encode(text=text)
-        return self.send_message(message)
-
-    def __init__(self, client, topic):
-        super(GeoWatchProducerPlain, self).__init__(client, topic, GeoWatchCodecPlain())
-
-
-class GeoWatchProducerJSON(GeoWatchProducer):
-
-    def send_json(self, data, now=None):
-        now = assert_now(now)
-        message = self._codec.encode(data=data)
-        return self.send_message(message)
-
-    def __init__(self, client, topic):
-        super(GeoWatchProducerJSON, self).__init__(client, topic, GeoWatchCodecJSON())
-
-
-class GeoWatchProducerTileRequest(GeoWatchProducer):
-
-    def send_tile_requests(self, tilesource, tiles, extension='png', now=None):
-        now = assert_now(now)
-        messages_encoded = self._codec.encode(tilesource=tilesource, tiles=tiles, extension=extension, now=now)
-        return self.send_messages(messages_encoded)
-
-    def __init__(self, client, topic):
-        super(GeoWatchProducerTileRequest, self).__init__(client, topic, GeoWatchCodecTileRequest())
