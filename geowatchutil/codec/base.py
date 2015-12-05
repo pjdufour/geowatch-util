@@ -48,8 +48,10 @@ class GeoWatchCodec(object):
             return GeoWatchChannelKinesis.decode(message)
         elif self._channel == "sns":
             return GeoWatchChannelSNS.decode(message)
+        elif self._channel == "sqs":
+            return GeoWatchChannelSQS.decode(message)
         elif self._channel == "slack":
-            return GeoWatchChannelSNS.decode(message)
+            return GeoWatchChannelSlack.decode(message)
         else:
             return message
 
@@ -62,6 +64,8 @@ class GeoWatchCodec(object):
             return GeoWatchChannelKinesis.encode(message)
         elif self._channel == "sns":
             return GeoWatchChannelSNS.encode(message)
+        elif self._channel == "sqs":
+            return GeoWatchChannelSQS.encode(message)
         elif self._channel == "slack":
             return GeoWatchChannelSlack.encode(message)
         else:
