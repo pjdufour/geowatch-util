@@ -4,9 +4,9 @@ from geowatchutil.client.geowatch_client_kinesis import GeoWatchClientKinesis
 from geowatchutil.consumer.geowatch_consumer_plain import GeoWatchConsumerPlain
 from geowatchutil.consumer.geowatch_consumer_json import GeoWatchConsumerJSON
 from geowatchutil.consumer.geowatch_consumer_tilerequest import GeoWatchConsumerTileRequest
-from geowatchutil.producer.geowatch_consumer_plain import GeoWatchProducerPlain
-from geowatchutil.producer.geowatch_consumer_json import GeoWatchProducerJSON
-from geowatchutil.producer.geowatch_consumer_tilerequest import GeoWatchProducerTileRequest
+from geowatchutil.producer.geowatch_producer_plain import GeoWatchProducerPlain
+from geowatchutil.producer.geowatch_producer_json import GeoWatchProducerJSON
+from geowatchutil.producer.geowatch_producer_tilerequest import GeoWatchProducerTileRequest
 
 
 def create_client_file(path):
