@@ -130,7 +130,7 @@ class GeoWatchChannelKinesis(GeoWatchChannelTopic):
         return message
 
     def send_message(self, message):
-        partition_key = message
+        partition_key = message[:256]
         self._client._client.put_record(
             StreamName=(self._client.topic_prefix + self.topic),
             Data=message,
@@ -139,7 +139,7 @@ class GeoWatchChannelKinesis(GeoWatchChannelTopic):
     def send_messages(self, messages):
         records = []
         for message in messages:
-            partition_key = message
+            partition_key = message[:256]
             records.append({'Data':message, 'PartitionKey':partition_key})
         self._client._client.put_records(Records=records, StreamName=(self._client.topic_prefix + self.topic))
 
