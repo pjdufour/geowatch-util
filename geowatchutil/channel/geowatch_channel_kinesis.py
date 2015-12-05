@@ -1,4 +1,4 @@
-from geowatchutil.channel.kinesis import GeoWatchChannelTopic
+from geowatchutil.channel.base import GeoWatchChannelTopic
 
 class GeoWatchChannelKinesis(GeoWatchChannelTopic):
 
