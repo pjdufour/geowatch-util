@@ -1,4 +1,4 @@
-from geowatchutil.client.kinesis import GeoWatchClientTopic
+from geowatchutil.client.base import GeoWatchClientTopic
 
 import boto3
 
