@@ -1,6 +1,6 @@
 from geowatchutil.consumer.base import GeoWatchConsumer
 
-from geowatchutil.codec.tilerequest import GeoWatchCodecTileRequest
+from geowatchutil.codec.geowatch_codec_tilerequest import GeoWatchCodecTileRequest
 
 
 class GeoWatchConsumerTileRequest(GeoWatchConsumer):
