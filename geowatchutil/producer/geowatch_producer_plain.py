@@ -1,6 +1,6 @@
-from geowatchutil.producer.base import GeoWatchProdcer
+from geowatchutil.producer.base import GeoWatchProducer
 
-from geowatchutil.codec.plain import GeoWatchCodecPlain
+from geowatchutil.codec.geowatch_codec_plain import GeoWatchCodecPlain
 
 class GeoWatchProducerPlain(GeoWatchProducer):
 
