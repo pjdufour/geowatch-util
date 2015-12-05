@@ -1,6 +1,6 @@
 from geowatchutil.producer.base import GeoWatchProdcer
 
-from geowatchutil.codec.json import GeoWatchCodecJSON
+from geowatchutil.codec.geowatch_codec_json import GeoWatchCodecJSON
 
 class GeoWatchProducerJSON(GeoWatchProducer):
 

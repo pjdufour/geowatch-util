@@ -1,6 +1,6 @@
 from geowatchutil.consumer.base import GeoWatchConsumer
 
-from geowatchutil.codec.json import GeoWatchCodecJSON
+from geowatchutil.codec.geowatch_codec_json import GeoWatchCodecJSON
 
 class GeoWatchConsumerJSON(GeoWatchConsumer):
 

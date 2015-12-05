@@ -1,12 +1,12 @@
 from geowatchutil.client.geowatch_client_files import GeoWatchClientFile
 from geowatchutil.client.geowatch_client_kafka import GeoWatchClientKafka
 from geowatchutil.client.geowatch_client_kinesis import GeoWatchClientKinesis
-from geowatchutil.consumer.plain import GeoWatchConsumerPlain
-from geowatchutil.consumer.json import GeoWatchConsumerJSON
-from geowatchutil.consumer.tilerequest import GeoWatchConsumerTileRequest
-from geowatchutil.producer.plain import GeoWatchProducerPlain
-from geowatchutil.producer.json import GeoWatchProducerJSON
-from geowatchutil.producer.tilerequest import GeoWatchProducerTileRequest
+from geowatchutil.consumer.geowatch_consumer_plain import GeoWatchConsumerPlain
+from geowatchutil.consumer.geowatch_consumer_json import GeoWatchConsumerJSON
+from geowatchutil.consumer.geowatch_consumer_tilerequest import GeoWatchConsumerTileRequest
+from geowatchutil.producer.geowatch_consumer_plain import GeoWatchProducerPlain
+from geowatchutil.producer.geowatch_consumer_json import GeoWatchProducerJSON
+from geowatchutil.producer.geowatch_consumer_tilerequest import GeoWatchProducerTileRequest
 
 
 def create_client_file(path):

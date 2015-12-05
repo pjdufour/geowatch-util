@@ -1,5 +1,7 @@
 from geowatchutil.codec.base import GeoWatchCodec
 
+import json
+
 class GeoWatchCodecJSON(GeoWatchCodec):
 
     def encode(self, data=None):
