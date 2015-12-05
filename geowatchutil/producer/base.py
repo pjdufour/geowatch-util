@@ -1,7 +1,8 @@
 import datetime
 
-from geowatchutil.channel import GeoWatchChannelFile, GeoWatchChannelKafka, GeoWatchChannelKinesis
-from geowatchutil.codec import GeoWatchCodecPlain, GeoWatchCodecJSON, GeoWatchCodecTileRequest
+from geowatchutil.channel.geowatch_channel_file import GeoWatchChannelFile
+from geowatchutil.channel.geowatch_channel_kafka import GeoWatchChannelKafka
+from geowatchutil.channel.geowatch_channel_kinesis import GeoWatchChannelKinesis
 from geowatchutil.node import GeoWatchNode
 
 
