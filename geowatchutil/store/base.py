@@ -49,13 +49,13 @@ class GeoWatchStoreMemcached(GeoWatchStore):
         elif self.client_type == "pymemcache":
             return self._client.get(self.key)
         else:
-            retur None
+            return None
 
     def _put(self, package):
-        if self.client_type == "umemcache"
+        if self.client_type == "umemcache":
             return None
         elif self.client_type == "pymemcache":
-            return self._client.set(self.key,package)
+            return self._client.set(self.key, package)
         else:
             return None
 
@@ -69,9 +69,8 @@ class GeoWatchStoreMemcached(GeoWatchStore):
         self.client_type = client_type
         if cache_location and cache_params:
             if self.client_type == "umemcache":
-                self.
                 try:
-                    from umemcache import MemcachedError
+                    # from umemcache import MemcachedError
                     from memcachepool.cache import UMemcacheCache
                     self._client = UMemcacheCache(cache_location, cache_params)
                 except:
@@ -109,10 +108,10 @@ class GeoWatchStoreS3(GeoWatchStore):
         self._buffer.clear()
 
     def create_bucket(self, bucket):
-         return self._client.create_bucket(Bucket=self.bucket)
+        return self._client.create_bucket(Bucket=self.bucket)
 
     def delete_bucket(self, bucket):
-         return self._client.delete_bucket(Bucket=self.bucket)
+        return self._client.delete_bucket(Bucket=self.bucket)
 
     def __init__(self, key, codec, aws_region=None, aws_access_key_id=None, aws_secret_access_key=None, aws_bucket=None):
         super(GeoWatchStoreS3, self).__init__("s3", key, codec)
