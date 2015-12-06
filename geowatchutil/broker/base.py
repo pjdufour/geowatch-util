@@ -63,7 +63,7 @@ class GeoWatchBroker(object):
                         seen.add(message)
                         messages_out.append(message)
                 if self.verbose:
-                    print str(len(messages_out))+" unique messages out of "+str(len(messages_out))+" messages."
+                    print str(len(messages_out))+" unique messages out of "+str(len(messages_all))+" messages."
             else:
                 messages_out = messages_all
 
