@@ -86,10 +86,10 @@ class GeoWatchBroker(object):
             time.sleep(self.sleep_period)
 
     def __init__(self, consumers=None, producers=None, stores_in=None, stores_out=None, count=1, timeout=5, threads=1, sleep_period=5, deduplicate=False, verbose=False):
-        self.consumers = self.consumers
-        self.producers = self.producers
-        self.stores_in = self.stores_in
-        self.stores_out = self.stores_out
+        self.consumers = consumers
+        self.producers = producers
+        self.stores_in = stores_in
+        self.stores_out = stores_out
         self.count = count
         self.timeout = timeout
         self.threads = threads
