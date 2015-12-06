@@ -43,6 +43,8 @@ class GeoWatchBroker(object):
                         messages_all.extend(messages)
 
             if self.consumers:
+                if self.verbose:
+                    print "Receiving messages from "+str(len(consumers))+" consumers."
                 for consumer in self.consumers:
                     left = self.count - len(messages_all)
                     if left > 0:
