@@ -8,7 +8,7 @@ class GeoWatchConsumerTileRequest(GeoWatchConsumer):
 
     def get_messages(self, count, ttl=60, block=True, timeout=5, now=None):
         now = assert_now(now)
-        response = self.get_messages_raw(count, block=block, timeout=timeout)
+        response = self._get_messages_raw(count, block=block, timeout=timeout)
         if self._client.backend == "kafka":
             return self._receive_tile_requests_kafka(response, now, ttl)
         elif self._client.backend == "kinesis":

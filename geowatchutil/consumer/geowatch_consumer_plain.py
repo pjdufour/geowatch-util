@@ -6,7 +6,7 @@ from geowatchutil.codec.geowatch_codec_plain import GeoWatchCodecPlain
 class GeoWatchConsumerPlain(GeoWatchConsumer):
 
     def get_messages(self, count, block=True, timeout=5):
-        response = self.get_messages_raw(count, block=block, timeout=timeout)
+        response = self._get_messages_raw(count, block=block, timeout=timeout)
         if self._client.backend == "kafka":
             return self._receive_messages_plain_kafka(response)
         elif self._client.backend == "kinesis":
