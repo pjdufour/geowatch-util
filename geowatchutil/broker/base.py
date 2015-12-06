@@ -94,6 +94,6 @@ class GeoWatchBroker(object):
         self.timeout = timeout
         self.threads = threads
         self.sleep_period = sleep_period
-        self.deduplicate = False
+        self.deduplicate = deduplicate
 
         self.verbose = verbose
