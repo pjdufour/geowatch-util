@@ -1,6 +1,6 @@
-from geowatchutil.codec.plain import GeoWatchCodecPlain
-from geowatchutil.codec.json import GeoWatchCodecJSON
-from geowatchutil.codec.tilerequest import GeoWatchCodecTileRequest
+from geowatchutil.codec.geowatch_codec_plain import GeoWatchCodecPlain
+from geowatchutil.codec.geowatch_codec_json import GeoWatchCodecJSON
+from geowatchutil.codec.geowatch_codec_tilerequest import GeoWatchCodecTileRequest
 
 
 def build_codec(codec, channel=None):
