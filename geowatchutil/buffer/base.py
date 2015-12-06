@@ -19,7 +19,7 @@ class GeoWatchBuffer(object):
     def full(self):
         if self.limit > 0:
             return len(self._messages) > self.limit
-        else
+        else:
             return False
 
     def clear(self):
