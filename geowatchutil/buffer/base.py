@@ -1,7 +1,7 @@
 class GeoWatchBuffer(object):
 
     # Public
-    max_count = None
+    limit = None
 
     # Private
     _count = None
@@ -17,11 +17,14 @@ class GeoWatchBuffer(object):
         return self.messages
 
     def full(self):
-        return self._count > self.limit
+        if self.limit > 0:
+            return len(self._messages) > self.limit
+        else
+            return False
 
     def clear(self):
         self.messages = []
 
-    def __init__(self, limit):
+    def __init__(self, limit=0):
         self.limit = limit
         self.messages = []
