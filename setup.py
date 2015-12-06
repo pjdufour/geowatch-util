@@ -15,7 +15,16 @@ setup(
     long_description=open('README.md').read(),
     download_url="https://github.com/geowatch/geowatch-util/zipball/master",
     #py_modules=["geowatchutil"],
-    packages=["geowatchutil", "geowatchutil.client", "geowatchutil.codec", "geowatchutil.channel", "geowatchutil.consumer", "geowatchutil.producer"],
+    packages=[
+        "geowatchutil",
+        "geowatchutil.broker",
+        "geowatchutil.buffer",
+        "geowatchutil.channel",
+        "geowatchutil.client",
+        "geowatchutil.codec",
+        "geowatchutil.consumer",
+        "geowatchutil.producer",
+        "geowatchutil.store"],
     classifiers = [
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
