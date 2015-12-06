@@ -1,4 +1,4 @@
-from geowatchutil.producer.base import GeoWatchProducer
+from geowatchutil.producer.base import GeoWatchProducer, assert_now
 
 from geowatchutil.codec.geowatch_codec_tilerequest import GeoWatchCodecTileRequest
 
@@ -12,4 +12,3 @@ class GeoWatchProducerTileRequest(GeoWatchProducer):
 
     def __init__(self, client, topic):
         super(GeoWatchProducerTileRequest, self).__init__(client, topic, GeoWatchCodecTileRequest())
-

@@ -5,7 +5,7 @@ from geowatchutil.codec.geowatch_codec_plain import GeoWatchCodecPlain
 
 class GeoWatchConsumerPlain(GeoWatchConsumer):
 
-    def receive_messages_plain(self, count, block=True, timeout=5):
+    def get_messages(self, count, block=True, timeout=5):
         response = self.get_messages_raw(count, block=block, timeout=timeout)
         if self._client.backend == "kafka":
             return self._receive_messages_plain_kafka(response)
@@ -16,7 +16,7 @@ class GeoWatchConsumerPlain(GeoWatchConsumer):
         messages = []
         for item in response:
             offset, message_raw = item
-            messages.append(self._codec.decode_channel(message_raw.value))
+            messages.append(self._codec.decode(message_raw.value))
         return messages
 
     def _receive_messages_plain_kinesis(self, response):
@@ -24,7 +24,7 @@ class GeoWatchConsumerPlain(GeoWatchConsumer):
         messages = []
         for item in response[u'Records']:
             # partition_key = item[u'PartitionKey']
-            messages.append(self._codec.decode_channel(item[u'Data']))
+            messages.append(self._codec.decode(item[u'Data']))
         return messages
 
     def __init__(self, client, topic, num_procs, group=None, shard_id=u'shardId-000000000000', shard_it_type='LATEST'):

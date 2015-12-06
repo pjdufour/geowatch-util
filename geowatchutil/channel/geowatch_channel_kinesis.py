@@ -1,5 +1,6 @@
 from geowatchutil.channel.base import GeoWatchChannelTopic
 
+
 class GeoWatchChannelKinesis(GeoWatchChannelTopic):
 
     # Public
@@ -32,7 +33,7 @@ class GeoWatchChannelKinesis(GeoWatchChannelTopic):
         records = []
         for message in messages:
             partition_key = message[:256]
-            records.append({'Data':message, 'PartitionKey':partition_key})
+            records.append({'Data': message, 'PartitionKey': partition_key})
         self._client._client.put_records(Records=records, StreamName=(self._client.topic_prefix + self.topic))
 
     def get_messages_raw(self, count, block=True, timeout=5):

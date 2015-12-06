@@ -1,11 +1,12 @@
-from geowatchutil.consumer.base import GeoWatchConsumer
+from geowatchutil.base import parse_date, is_expired
+from geowatchutil.consumer.base import GeoWatchConsumer, assert_now
 
 from geowatchutil.codec.geowatch_codec_tilerequest import GeoWatchCodecTileRequest
 
 
 class GeoWatchConsumerTileRequest(GeoWatchConsumer):
 
-    def receive_tile_requests(self, count, ttl=60, block=True, timeout=5, now=None):
+    def get_messages(self, count, ttl=60, block=True, timeout=5, now=None):
         now = assert_now(now)
         response = self.get_messages_raw(count, block=block, timeout=timeout)
         if self._client.backend == "kafka":

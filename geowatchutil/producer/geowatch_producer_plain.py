@@ -2,6 +2,7 @@ from geowatchutil.producer.base import GeoWatchProducer
 
 from geowatchutil.codec.geowatch_codec_plain import GeoWatchCodecPlain
 
+
 class GeoWatchProducerPlain(GeoWatchProducer):
 
     def send_text(self, text, now=None):

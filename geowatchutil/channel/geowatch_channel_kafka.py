@@ -1,5 +1,8 @@
 from geowatchutil.channel.base import GeoWatchChannelTopic
 
+from kafka import SimpleProducer, MultiProcessConsumer
+
+
 class GeoWatchChannelKafka(GeoWatchChannelTopic):
 
     # Public

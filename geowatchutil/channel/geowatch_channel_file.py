@@ -1,5 +1,6 @@
 from geowatchutil.channel.base import GeoWatchChannel
 
+
 class GeoWatchChannelFile(GeoWatchChannel):
 
     _file = None

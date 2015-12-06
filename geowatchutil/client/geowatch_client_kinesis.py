@@ -2,6 +2,7 @@ from geowatchutil.client.base import GeoWatchClientTopic
 
 import boto3
 
+
 class GeoWatchClientKinesis(GeoWatchClientTopic):
 
     def check_topic_exists(self, topic, timeout=5, verbose=True):

@@ -1,5 +1,6 @@
 from geowatchutil.channel.base import GeoWatchChannel
 
+
 class GeoWatchChannelSNS(GeoWatchChannel):
 
     def send_message(self, message):

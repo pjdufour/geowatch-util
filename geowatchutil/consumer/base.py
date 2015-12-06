@@ -1,6 +1,5 @@
 import datetime
 
-from geowatchutil.base import parse_date, is_expired
 from geowatchutil.channel.geowatch_channel_file import GeoWatchChannelFile
 from geowatchutil.channel.geowatch_channel_kafka import GeoWatchChannelKafka
 from geowatchutil.channel.geowatch_channel_kinesis import GeoWatchChannelKinesis
@@ -21,7 +20,7 @@ class GeoWatchConsumer(GeoWatchNode):
     # Private
     _channel = None
 
-    def get_messages_raw(self, count, block=True, timeout=5):
+    def _get_messages_raw(self, count, block=True, timeout=5):
         return self._channel.get_messages_raw(count, block=block, timeout=timeout)
 
     def __init__(self, client, topic, codec, num_procs, group=None, shard_id=u'shardId-000000000000', shard_it_type='LATEST'):

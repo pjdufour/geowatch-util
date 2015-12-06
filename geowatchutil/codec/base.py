@@ -1,6 +1,4 @@
-import json
-
-from geowatchutil.base import parse_date, FORMAT_TILE_REQUEST
+from geowatchutil.base import parse_date
 from geowatchutil.channel.geowatch_channel_file import GeoWatchChannelFile
 from geowatchutil.channel.geowatch_channel_kafka import GeoWatchChannelKafka
 from geowatchutil.channel.geowatch_channel_kinesis import GeoWatchChannelKinesis
