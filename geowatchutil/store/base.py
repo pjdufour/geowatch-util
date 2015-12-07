@@ -112,7 +112,7 @@ class GeoWatchStoreS3(GeoWatchStore):
         messages = self._buffer.get_messages()
         if self.which == "first":
             self._put(self._codec.pack(messages, which=self.which))  # _codec.pack returns text representation
-        elif self.which == "index"
+        elif self.which == "index":
             self._put(self._codec.pack(messages, which=self.which, which_index=self.which_index))  # _codec.pack returns text representation
         else:
             self._put(self._codec.pack(messages))  # _codec.pack returns text representation
