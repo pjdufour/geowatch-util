@@ -87,7 +87,13 @@ class GeoWatchClientSlack(GeoWatchClientWebHook):
             base=self.url_api,
             authtoken=self.authtoken,
             exclude_archived=exclude_archived)
-        return self._get(url)
+        response = self._get(url)
+        if verbose:
+            print response
+        channels = []
+        for channel in response['channels']
+            channels.append(channel['name'])
+        return channels
 
     def __init__(self, url_webhook="", authtoken=None):
         super(GeoWatchClientSlack, self).__init__(backend="slack", url_webhook=url_webhook, authtoken=authtoken)

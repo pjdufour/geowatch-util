@@ -1,6 +1,7 @@
 # from httplib import HTTPConnection
 from httplib import HTTPSConnection
 from urlparse import urlsplit
+import urllib2
 
 
 class GeoWatchClient(object):
@@ -19,12 +20,7 @@ class GeoWatchClientWebHook(GeoWatchClient):
     url_webhook = None
 
     def _get(self, url):
-        u2 = urlsplit(url)
-        headers = {}
-        conn = HTTPSConnection(u2.hostname, u2.port)
-        conn.request("GET", str(u2.path), None, headers)
-        response = conn.getresponse()
-        return response.read()
+        return urllib2.urlopen(url).read()
 
     def _post(self, url, data):
         u2 = urlsplit(url)
