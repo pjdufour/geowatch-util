@@ -4,6 +4,7 @@ from geowatchutil.broker.base import GeoWatchBroker
 from geowatchutil.store.geowatch_store_file import GeoWatchStoreFile
 from geowatchutil.channel.base import GeoWatchChannelError
 from geowatchutil.channel.geowatch_channel_slack import GeoWatchChannelSlack
+from geowatchutil.client.geowatch_client_slack import GeoWatchClientSlack
 
 
 class TestBuffer(unittest.TestCase):
@@ -29,7 +30,7 @@ class TestBroker(unittest.TestCase):
     def test_broker_plain(self):
         m_in = ["hello", "world"]
         outfile = "out.txt"
-        store_out = GeoWatchStoreFile(outfile, "GeoWatchCodecPlain", which="first", which_index="0")
+        store_out = GeoWatchStoreFile(outfile, "GeoWatchCodecPlain", which="all", which_index="0")
         stores_out = [store_out]
         broker = GeoWatchBroker(
             stores_out=stores_out,
@@ -52,7 +53,7 @@ class TestBroker(unittest.TestCase):
         m_out = ""
         with open(outfile, 'rb') as f:
             m_out = f.read()
-        self.assertEqual(m_out, "{\"hello\":\"world\"}")
+        self.assertEqual(m_out, "{\"hello\": \"world\"}")
 
 
 class TestChannel(unittest.TestCase):
@@ -61,9 +62,10 @@ class TestChannel(unittest.TestCase):
         with self.assertRaises(GeoWatchChannelError):
             GeoWatchChannelSlack.decode(1)
 
-        c = GeoWatchChannelSlack()
+        client = GeoWatchClientSlack()
+        channel = GeoWatchChannelSlack(client, "random", "producer")
         with self.assertRaises(GeoWatchChannelError):
-            c.get_messages_raw(1)
+            channel.get_messages_raw(1)
 
 if __name__ == '__main__':
     unittest.main()
