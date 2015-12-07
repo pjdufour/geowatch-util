@@ -88,11 +88,11 @@ class GeoWatchClientSlack(GeoWatchClientWebHook):
             authtoken=self.authtoken,
             exclude_archived=exclude_archived)
         response = self._get(url)
+        data = json.loads(response)
         if verbose:
             print response
         channels = []
-        for i in range(len(response['channels'])):
-            channel = response['channels'][i]
+        for channel in data['channels']:
             channels.append(channel['name'])
         return channels
 
