@@ -18,11 +18,18 @@ class GeoWatchCodecPlain(GeoWatchCodec):
         """
         return self.decode_channel(text)
 
-    def pack(self, messages):
+    def pack(self, messages, which="all", which_index=0):
         """
         pack messages for store
         """
-        return "\n".join(messages)
+        if which == "first":
+            return messages[0]
+        elif which == "last":
+            return messages[-1]
+        elif which == "index":
+            return messages[which_index]
+        else:
+            return "\n".join(messages)
 
     def unpack(self, data):
         """
