@@ -59,7 +59,6 @@ class GeoWatchBroker(object):
             cycle += 1
             time.sleep(self.sleep_period)
 
-
     def _cycle_in(self):
         messages_all = []
         messages_out = []
@@ -81,8 +80,6 @@ class GeoWatchBroker(object):
                     if messages:
                         messages_all.extend(messages)
 
-        
-
         if self.verbose:
             print "Processing "+str(len(messages_all))+" messages."
 
@@ -99,20 +96,18 @@ class GeoWatchBroker(object):
 
         return messages_out
 
-
     def _cycle_filter(self, messages=None):
         if self.filter_last_one:
             messages = [messages[-1]]
 
         return messages
 
-
     def _cycle_out(self, messages=None):
         if messages:
-             if self.producers:
+            if self.producers:
                 for producer in self.producers:
                     producer.send_messages(messages)
-             if self.stores_out:
+            if self.stores_out:
                 for store in self.stores_out:
                     store.write_messages(messages, flush=True)
 
