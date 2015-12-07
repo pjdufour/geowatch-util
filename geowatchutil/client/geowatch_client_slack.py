@@ -91,7 +91,7 @@ class GeoWatchClientSlack(GeoWatchClientWebHook):
         if verbose:
             print response
         channels = []
-        for channel in response['channels']
+        for channel in response['channels']:
             channels.append(channel['name'])
         return channels
 
