@@ -11,7 +11,7 @@ class GeoWatchClientSlack(GeoWatchClientWebHook):
 
         try:
             url = "{base}/channels.info?token={authtoken}&channel={channel}".format(
-                base=self.url_api,
+                base=self.url_webhook,
                 authtoken=self.authtoken,
                 channel=channel)
             self._get(url)
@@ -34,7 +34,7 @@ class GeoWatchClientSlack(GeoWatchClientWebHook):
         created = False
         try:
             url = "{base}/channels.create?token={authtoken}&name={channel}".format(
-                base=self.url_api,
+                base=self.url_webhook,
                 authtoken=self.authtoken,
                 channel=channel)
             self._get(url)
@@ -57,7 +57,7 @@ class GeoWatchClientSlack(GeoWatchClientWebHook):
         archived = False
         try:
             url = "{base}/channels.archive?token={authtoken}&channel={channel}".format(
-                base=self.url_api,
+                base=self.url_webhook,
                 authtoken=self.authtoken,
                 channel=channel)
             self._get(url)
@@ -84,10 +84,10 @@ class GeoWatchClientSlack(GeoWatchClientWebHook):
 
     def list_channels(self, exclude_archived=True, verbose=True):
         url = "{base}/channels.list?token={authtoken}&exclude_archived={exclude_archived}".format(
-            base=self.url_api,
+            base=self.url_webhook,
             authtoken=self.authtoken,
             exclude_archived=exclude_archived)
         return self._get(url)
 
-    def __init__(self, url_webhook=""):
-        super(GeoWatchClientSlack, self).__init__(backend="slack", url_webhook=url_webhook)
+    def __init__(self, url_webhook="", authtoken=None):
+        super(GeoWatchClientSlack, self).__init__(backend="slack", url_webhook=url_webhook, authtoken=authtoken)
