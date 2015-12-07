@@ -73,7 +73,7 @@ class GeoWatchClientSlack(GeoWatchClientWebHook):
 
         return deleted
 
-    def archive_channels(self, channels, ignore_errors=True, timeout=5 verbose=True):
+    def archive_channels(self, channels, ignore_errors=True, timeout=5, verbose=True):
         archived = True
         for channel in channels:
             archived = self.archive_channel(channel, timeout=timeout, verbose=verbose)
