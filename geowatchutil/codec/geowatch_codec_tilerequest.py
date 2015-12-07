@@ -38,4 +38,4 @@ class GeoWatchCodecTileRequest(GeoWatchCodec):
         return data.split("\n")
 
     def __init__(self, channel=None):
-        super(GeoWatchCodecTileRequest, self).__init__(channel=channel)
+        super(GeoWatchCodecTileRequest, self).__init__(channel=channel, content_type="text/plain")

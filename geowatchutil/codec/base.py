@@ -35,6 +35,10 @@ def decode_tile_request_log(a):
 
 class GeoWatchCodec(object):
 
+    # Public
+    content_type = "text/plain"
+
+    # Private
     _channel = None
 
     def decode_channel(self, message):
@@ -72,5 +76,6 @@ class GeoWatchCodec(object):
     def setChannel(self, channel):
         self._channel = channel
 
-    def __init__(self, channel=None):
+    def __init__(self, channel=None, content_type="text/plain"):
         self._channel = channel
+        self.content_type = content_type

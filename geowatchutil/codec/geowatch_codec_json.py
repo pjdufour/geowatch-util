@@ -35,4 +35,4 @@ class GeoWatchCodecJSON(GeoWatchCodec):
         return [json.loads(m) for m in messages]
 
     def __init__(self, channel=None):
-        super(GeoWatchCodecJSON, self).__init__(channel=channel)
+        super(GeoWatchCodecJSON, self).__init__(channel=channel, content_type="application/json")

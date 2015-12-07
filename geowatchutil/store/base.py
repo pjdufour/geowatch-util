@@ -100,7 +100,11 @@ class GeoWatchStoreS3(GeoWatchStore):
         return self._client.get_object(Bucket=self.bucket, Key=self.key).decode('utf-8')
 
     def _put(self, package):
-        return self._client.put_object(Bucket=self.bucket, Key=self.key, Body=package.encode('utf-8'))
+        return self._client.put_object(
+            Bucket=self.bucket,
+            Key=self.key,
+            Body=package.encode('utf-8'),
+            ContentType=self._codec.content_type)
 
     def flush(self):
         messages = self._buffer.get_messages()
