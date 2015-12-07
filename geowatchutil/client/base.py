@@ -18,7 +18,7 @@ class GeoWatchClientWebHook(GeoWatchClient):
     authtoken = None
     url_webhook = None
 
-    def _get(url):
+    def _get(self, url):
         u2 = urlsplit(url)
         headers = {}
         conn = HTTPSConnection(u2.hostname, u2.port)
@@ -26,7 +26,7 @@ class GeoWatchClientWebHook(GeoWatchClient):
         response = conn.getresponse()
         return response.read()
 
-    def _post(url, data):
+    def _post(self, url, data):
         u2 = urlsplit(url)
         headers = {}
         conn = HTTPSConnection(u2.hostname, u2.port)
