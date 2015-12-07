@@ -5,16 +5,24 @@ GeoWatch Util (geowatch-util)
 
 ## Description
 
-Utility library for GeoWatch
+Utility library for GeoWatch, a spatially-enabled distributed message broker.
 
 ## Installation
+
+### AWS
+
+### Apache Kafka
+
+For using Apache Kafka, you'll need to do something similar to the following:
 
 ```
 apt-get update
 apt-get install -y curl vim git
 apt-get install -y zookeeperd
-#==#
 ```
+
+and then:
+
 ```
 cd ~
 wget 'http://apache.cs.utah.edu/kafka/0.8.2.0/kafka_2.10-0.8.2.0.tgz' -O 'kafka_2.10-0.8.2.0.tgz'
@@ -23,8 +31,13 @@ cd kafka_2.10-0.8.2.0
 # Change zookeeper port to 8002
 # vim config/zookeeper.properties
 # vim config/server.properties
-
 ```
+
+## Usage
+
+### Apache Kafka
+
+If you are using Apache Kafka as a channel, the following might be helpful.  Set up topics, such as the following, with:
 
 ```
 # Set up topics
@@ -33,13 +46,30 @@ bin/kafka-topics.sh --create --zookeeper localhost:8002 --replication-factor 1 -
 bin/kafka-topics.sh --create --zookeeper localhost:8002 --replication-factor 1 --partitions 1 --topic statistics
 ```
 
-## Usage
 
-Test kafka
+Test that GeoWatch is pushing messages properly into the Kafka channel with:
+
 ```
 # Listen to topics
 bin/kafka-console-consumer.sh --zookeeper localhost:8002 --topic requests --from-beginning
 ```
+
+### AWS Kinesis
+
+TBD
+
+
+### AWS SNS
+
+TBD
+
+### AWS SQS
+
+TBD
+
+### Slack
+
+TBD
 
 ## Contributing
 
