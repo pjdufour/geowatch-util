@@ -9,6 +9,8 @@ class GeoWatchStore(object):
     # Public
     backend = None
     key = None  # or path
+    which = None
+    which_index = None
 
     # Private
     _buffer = None  # Used for temporarily caching messages locally before storing
@@ -24,11 +26,46 @@ class GeoWatchStore(object):
         if flush:
             self.flush()
 
-    def __init__(self, backend, key, codec):
+    def __init__(self, backend, key, codec, which="all", which_index=0):
         self.backend = backend
         self.key = key
         self._buffer = GeoWatchBuffer()
         self._codec = build_codec(codec)  # takes in well-known codec name and returns object
+        self.which = which
+        self.which_index = which_index
+
+
+class GeoWatchStoreFile(GeoWatchStore):
+
+    # Public
+
+    # Private
+
+    def read(self):
+        return self._codec.unpack(self._get())
+
+    def _get(self):
+        message = ""
+        with open(self.key, 'rb') as f:
+            message = f.read()
+        return message
+
+    def _put(self, package):
+        with open(self.key, 'wb') as f:
+            f.write(package)
+
+    def flush(self):
+        messages = self._buffer.get_messages()
+        if self.which == "first":
+            self._put(self._codec.pack(messages, which=self.which))  # _codec.pack returns text representation
+        elif self.which == "index":
+            self._put(self._codec.pack(messages, which=self.which, which_index=self.which_index))  # _codec.pack returns text representation
+        else:
+            self._put(self._codec.pack(messages))  # _codec.pack returns text representation
+        self._buffer.clear()
+
+    def __init__(self, key, codec, which="all", which_index="0"):
+        super(GeoWatchStoreFile, self).__init__("file", key, codec, which=which, which_index=which_index)
 
 
 class GeoWatchStoreMemcached(GeoWatchStore):
@@ -64,8 +101,8 @@ class GeoWatchStoreMemcached(GeoWatchStore):
         self._put(self._codec.pack(messages))  # _codec.pack returns text representation
         self._buffer.clear()
 
-    def __init__(self, key, codec, cache_host=None, cache_port=None, cache_location=None, cache_params=None, client_type="pymemcache"):
-        super(GeoWatchStoreMemcached, self).__init__("memcached", key, codec)
+    def __init__(self, key, codec, cache_host=None, cache_port=None, cache_location=None, cache_params=None, client_type="pymemcache", which="all", which_index=0):
+        super(GeoWatchStoreMemcached, self).__init__("memcached", key, codec, which, which_index)
         self.client_type = client_type
         if cache_location and cache_params:
             if self.client_type == "umemcache":
@@ -89,8 +126,6 @@ class GeoWatchStoreS3(GeoWatchStore):
 
     # Public
     bucket = None
-    which = None
-    which_index = None
 
     # Private
     _client = None
@@ -125,9 +160,7 @@ class GeoWatchStoreS3(GeoWatchStore):
         return self._client.delete_bucket(Bucket=self.bucket)
 
     def __init__(self, key, codec, aws_region=None, aws_access_key_id=None, aws_secret_access_key=None, aws_bucket=None, which="all", which_index=0):
-        super(GeoWatchStoreS3, self).__init__("s3", key, codec)
-        self.which = which
-        self.which_index = which_index
+        super(GeoWatchStoreS3, self).__init__("s3", key, codec, which=which, which_index=which_index)
 
         if aws_region and aws_access_key_id and aws_secret_access_key and aws_bucket:
             session = boto3.session.Session(
@@ -162,8 +195,8 @@ class GeoWatchStoreMongoDB(GeoWatchStore):
         self._put(self._codec.pack(messages))  # _codec.pack returns text representation
         self._buffer.clear()
 
-    def __init__(self, key, codec, aws_region=None, aws_access_key_id=None, aws_secret_access_key=None, aws_bucket=None):
-        super(GeoWatchStoreS3, self).__init__("s3", key, codec)
+    def __init__(self, key, codec, aws_region=None, aws_access_key_id=None, aws_secret_access_key=None, aws_bucket=None, which="all", which_index=0):
+        super(GeoWatchStoreS3, self).__init__("s3", key, codec, which=which, which_index=which_index)
 
         if aws_region and aws_access_key_id and aws_secret_access_key and aws_bucket:
             session = boto3.session.Session(
