@@ -89,6 +89,8 @@ class GeoWatchStoreS3(GeoWatchStore):
 
     # Public
     bucket = None
+    which = None
+    which_index = None
 
     # Private
     _client = None
@@ -108,7 +110,12 @@ class GeoWatchStoreS3(GeoWatchStore):
 
     def flush(self):
         messages = self._buffer.get_messages()
-        self._put(self._codec.pack(messages))  # _codec.pack returns text representation
+        if self.which == "first":
+            self._put(self._codec.pack(messages, which=self.which))  # _codec.pack returns text representation
+        elif self.which == "index"
+            self._put(self._codec.pack(messages, which=self.which, which_index=self.which_index))  # _codec.pack returns text representation
+        else:
+            self._put(self._codec.pack(messages))  # _codec.pack returns text representation
         self._buffer.clear()
 
     def create_bucket(self, bucket):
@@ -117,8 +124,10 @@ class GeoWatchStoreS3(GeoWatchStore):
     def delete_bucket(self, bucket):
         return self._client.delete_bucket(Bucket=self.bucket)
 
-    def __init__(self, key, codec, aws_region=None, aws_access_key_id=None, aws_secret_access_key=None, aws_bucket=None):
+    def __init__(self, key, codec, aws_region=None, aws_access_key_id=None, aws_secret_access_key=None, aws_bucket=None, which="all", which_index=0):
         super(GeoWatchStoreS3, self).__init__("s3", key, codec)
+        self.which = which
+        self.which_index = which_index
 
         if aws_region and aws_access_key_id and aws_secret_access_key and aws_bucket:
             session = boto3.session.Session(

@@ -17,14 +17,21 @@ class GeoWatchCodecJSON(GeoWatchCodec):
         """
         return json.loads(self.decode_channel(data))
 
-    def pack(self, messages):
+    def pack(self, messages, which="all", which_index=0):
         """
         pack messages for store
         """
-        package = {
-            'messages': [json.dumps(m) for m in messages]
-        }
-        return json.dumps(package)
+        if which == "first":
+            return json.dumps(messages[0])
+        elif which == "last":
+            return json.dumps(messages[-1])
+        elif which == "index":
+            return json.dumps(messages[index])
+        else:
+            package = {
+                'messages': [json.dumps(m) for m in messages]
+            }
+            return json.dumps(package)
 
     def unpack(self, data):
         """
