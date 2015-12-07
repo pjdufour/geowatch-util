@@ -122,6 +122,7 @@ class GeoWatchStoreS3(GeoWatchStore):
                 aws_access_key_id=aws_access_key_id,
                 aws_secret_access_key=aws_secret_access_key)
             self._client = session.client('s3')
+            self.bucket = aws_bucket
         else:
             print "Could not create GeoWatch client for S3 Backend.  Missing parameters."
 
