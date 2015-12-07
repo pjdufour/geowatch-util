@@ -1,3 +1,6 @@
+from geowatchutil.base import GeoWatchError
+
+
 class GeoWatchChannel(object):
 
     # Public
@@ -23,3 +26,9 @@ class GeoWatchChannelTopic(GeoWatchChannel):
     def __init__(self, client, topic, mode, num_procs=1):
         super(GeoWatchChannelTopic, self).__init__(client, mode, num_procs=1)
         self.topic = topic
+
+
+class GeoWatchChannelError(GeoWatchError):
+
+    def __init__(self, * args, ** kwargs):
+        super(GeoWatchChannelError, self).__init__(self, * args, ** kwargs)

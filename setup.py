@@ -24,7 +24,8 @@ setup(
         "geowatchutil.codec",
         "geowatchutil.consumer",
         "geowatchutil.producer",
-        "geowatchutil.store"],
+        "geowatchutil.store",
+        "geowatchutil.tests"],
     classifiers = [
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',

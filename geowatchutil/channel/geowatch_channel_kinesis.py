@@ -37,6 +37,9 @@ class GeoWatchChannelKinesis(GeoWatchChannelTopic):
         self._client._client.put_records(Records=records, StreamName=(self._client.topic_prefix + self.topic))
 
     def get_messages_raw(self, count, block=True, timeout=5):
+        """
+        get_messages_raw will return raw Kinesis objects
+        """
         return self._client._client.get_records(ShardIterator=self._shard_it, Limit=count)
 
     def __init__(self, client, topic, mode, num_procs=1, shard_id=u'shardId-000000000000', shard_it_type='LATEST'):

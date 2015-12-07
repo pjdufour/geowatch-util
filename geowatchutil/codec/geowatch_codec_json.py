@@ -26,7 +26,7 @@ class GeoWatchCodecJSON(GeoWatchCodec):
         elif which == "last":
             return json.dumps(messages[-1])
         elif which == "index":
-            return json.dumps(messages[index])
+            return json.dumps(messages[which_index])
         else:
             package = {
                 'messages': [json.dumps(m) for m in messages]

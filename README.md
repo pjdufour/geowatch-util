@@ -1,3 +1,5 @@
+![Build Status](https://travis-ci.org/geowatch/geowatch-util.png)
+
 GeoWatch Util (geowatch-util)
 ================
 

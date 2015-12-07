@@ -30,7 +30,7 @@ class GeoWatchClientSlack(GeoWatchClientWebHook):
         return exists
 
     def create_channel(self, channel, shards=1, timeout=5, verbose=True):
-        if self.check_channel_exists(topic, timeout=timeout, verbose=verbose):
+        if self.check_channel_exists(channel, timeout=timeout, verbose=verbose):
             return False
 
         created = False
@@ -53,7 +53,7 @@ class GeoWatchClientSlack(GeoWatchClientWebHook):
         return created
 
     def archive_channel(self, channel, timeout=5, verbose=True):
-        if not self.check_channel_exists(topic, timeout=timeout, verbose=verbose):
+        if not self.check_channel_exists(channel, timeout=timeout, verbose=verbose):
             return False
 
         archived = False
@@ -73,9 +73,9 @@ class GeoWatchClientSlack(GeoWatchClientWebHook):
             else:
                 print "Channel "+channel+" could not be archived."
 
-        return deleted
+        return archived
 
-    def archive_channels(self, channels, ignore_errors=True, timeout=5, verbose=True):
+    def archive_channels(self, channels, ignore_errors=True, timeout=5, verbose=False):
         archived = True
         for channel in channels:
             archived = self.archive_channel(channel, timeout=timeout, verbose=verbose)
@@ -84,19 +84,23 @@ class GeoWatchClientSlack(GeoWatchClientWebHook):
 
         return archived
 
-    def list_channels(self, exclude_archived=True, verbose=True):
-        url = "{base}/channels.list?token={authtoken}&exclude_archived={exclude_archived}".format(
-            base=self.url_api,
-            authtoken=self.authtoken,
-            exclude_archived=exclude_archived)
-        response = self._get(url)
-        data = json.loads(response)
-        if verbose:
-            print response
-        channels = []
-        for channel in data['channels']:
-            channels.append(channel['name'])
-        return channels
+    def list_channels(self, exclude_archived=True, verbose=False):
+        if self.authtoken:
+            url = "{base}/channels.list?token={authtoken}&exclude_archived={exclude_archived}".format(
+                base=self.url_api,
+                authtoken=self.authtoken,
+                exclude_archived=exclude_archived)
+            response = self._get(url)
+            data = json.loads(response)
+            if verbose:
+                print response
+            channels = []
+            for channel in data['channels']:
+                channels.append(channel['name'])
+            return channels
+        else:
+            print "No authtoken present."
+            return []
 
     def __init__(self, url_webhook="", authtoken=None):
         super(GeoWatchClientSlack, self).__init__(backend="slack", url_webhook=url_webhook, authtoken=authtoken)

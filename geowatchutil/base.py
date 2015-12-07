@@ -18,3 +18,9 @@ def parse_date(date_string):
 
 def is_expired(date, now, ttl):
     return now >= (date + datetime.timedelta(seconds=ttl))
+
+
+class GeoWatchError(Exception):
+
+    def __init__(self, * args, ** kwargs):
+        super(GeoWatchError, self).__init__(self, * args, ** kwargs)

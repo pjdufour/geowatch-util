@@ -38,8 +38,8 @@ class GeoWatchStoreMemcached(GeoWatchStore):
         self.client_type = client_type
         if host and port:
             if self.client_type == "umemcache":
-                #try:
-                if 1==1:
+                # try:
+                if 1 == 1:
                     cache_params = {
                         'BACKEND': 'memcachepool.cache.UMemcacheCache',
                         'LOCATION': host+":"+str(port),
@@ -53,7 +53,7 @@ class GeoWatchStoreMemcached(GeoWatchStore):
                     # from umemcache import MemcachedError
                     from memcachepool.cache import UMemcacheCache
                     self._client = UMemcacheCache(host+":"+str(port), cache_params)
-                #except:
+                # except:
                 #    self._client = None
             elif self.client_type == "pymemcache":
                 try:
