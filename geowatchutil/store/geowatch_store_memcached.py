@@ -42,7 +42,7 @@ class GeoWatchStoreMemcached(GeoWatchStore):
                 if 1==1:
                     cache_params = {
                         'BACKEND': 'memcachepool.cache.UMemcacheCache',
-                        'LOCATION': host+":"+port,
+                        'LOCATION': host+":"+str(port),
                         'OPTIONS': {
                             'MAX_POOL_SIZE': 40,
                             'BLACKLIST_TIME': 60,
