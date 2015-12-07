@@ -72,5 +72,5 @@ class GeoWatchChannelSlack(GeoWatchChannelTopic):
             client,
             topic,
             mode,
-            num_procs=num_procs,
-            message_templates=message_templates)
+            num_procs=num_procs)
+        self.message_templates = message_templates
