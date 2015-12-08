@@ -8,6 +8,9 @@ from geowatchutil.client.geowatch_client_slack import GeoWatchClientSlack
 
 
 class TestBuffer(unittest.TestCase):
+    """
+    TestBuffer is used for testing GeoWatchBuffer
+    """
 
     def test_buffer_clear(self):
         b = GeoWatchBuffer(limit=3)

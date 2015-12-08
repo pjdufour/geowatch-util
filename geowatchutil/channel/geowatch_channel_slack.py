@@ -19,6 +19,9 @@ class GeoWatchChannelSlack(GeoWatchChannelTopic):
         raise GeoWatchChannelError("GeoWatch only supports sending to Slack.  GeoWatch cannot get messages from Slack.")
 
     def _render_message_attachments(self, m, t):
+    """
+    render message based on template
+    """
         r = copy.deepcopy(t)
         for i in range(len(r["attachments"])):
             a = self._render_message_attachment(m, r["attachments"][i])

@@ -1,8 +1,6 @@
 import datetime
 
-from geowatchutil.channel.geowatch_channel_file import GeoWatchChannelFile
-from geowatchutil.channel.geowatch_channel_kafka import GeoWatchChannelKafka
-from geowatchutil.channel.geowatch_channel_kinesis import GeoWatchChannelKinesis
+from geowatchutil.channel.factory import build_channel
 from geowatchutil.node import GeoWatchNode
 
 
@@ -27,9 +25,4 @@ class GeoWatchConsumer(GeoWatchNode):
         super(GeoWatchConsumer, self).__init__(client, topic, codec)
         self.num_procs = num_procs
 
-        if self._client.backend == "file":
-            self._channel = GeoWatchChannelFile(client, "consumer")
-        if self._client.backend == "kafka":
-            self._channel = GeoWatchChannelKafka(client, topic, "consumer", num_procs=num_procs, group=group)
-        elif self._client.backend == "kinesis":
-            self._channel = GeoWatchChannelKinesis(client, topic, "consumer", num_procs=num_procs, shard_id=shard_id, shard_it_type=shard_it_type)
+        self._channel = build_channel(self._client.backend, topic=topic, mode="consumer", num_procs=num_procs, group=group, shard_id=shard_id, shard_it_type=shard_it_type)

@@ -1,10 +1,6 @@
 import datetime
 
-from geowatchutil.channel.geowatch_channel_file import GeoWatchChannelFile
-from geowatchutil.channel.geowatch_channel_kafka import GeoWatchChannelKafka
-from geowatchutil.channel.geowatch_channel_kinesis import GeoWatchChannelKinesis
-from geowatchutil.channel.geowatch_channel_sns import GeoWatchChannelSNS
-from geowatchutil.channel.geowatch_channel_sqs import GeoWatchChannelSQS
+from geowatchutil.channel.factory import build_channel
 from geowatchutil.node import GeoWatchNode
 
 
@@ -25,14 +21,4 @@ class GeoWatchProducer(GeoWatchNode):
 
     def __init__(self, client, topic, codec):
         super(GeoWatchProducer, self).__init__(client, topic, codec)
-
-        if self._client.backend == "file":
-            self._channel = GeoWatchChannelFile(client, "producer")
-        elif self._client.backend == "kafka":
-            self._channel = GeoWatchChannelKafka(client, topic, "producer")
-        elif self._client.backend == "kinesis":
-            self._channel = GeoWatchChannelKinesis(client, topic, "producer")
-        elif self._client.backend == "sns":
-            self._channel = GeoWatchChannelSNS(client, topic, "producer")
-        elif self._client.backend == "sns":
-            self._channel = GeoWatchChannelSQS(client, topic, "producer")
+        self._channel = build_channel(self._client.backend, topic=topic, mode="producer")
