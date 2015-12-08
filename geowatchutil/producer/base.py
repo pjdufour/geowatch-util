@@ -21,6 +21,15 @@ class GeoWatchProducer(GeoWatchNode):
             messages_encoded.append(self._codec.encode(message))
         return self._channel.send_messages(messages_encoded)
 
+    def close(self):
+        self._channel.close()
+
     def __init__(self, client, codec, topic):
         super(GeoWatchProducer, self).__init__(client, "producer", codec, topic)
         self._channel = build_channel(self._client.backend, topic=topic, mode="producer")
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args, **kwargs):
+        self.close()

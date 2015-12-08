@@ -9,8 +9,17 @@ class GeoWatchClient(object):
     # Public
     backend = None
 
+    def close(self):
+        pass
+
     def __init__(self, backend=""):
         self.backend = backend
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args, **kwargs):
+        self.close()
 
 
 class GeoWatchClientWebHook(GeoWatchClient):

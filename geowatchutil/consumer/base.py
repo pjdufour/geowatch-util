@@ -40,6 +40,9 @@ class GeoWatchConsumer(GeoWatchNode):
     def _get_messages_raw(self, count, block=True, timeout=5):
         return self._channel.get_messages_raw(count, block=block, timeout=timeout)
 
+    def close(self):
+        self._channel.close()
+
     def __init__(self, client, codec, topic, num_procs=1, group=None, shard_id=u'shardId-000000000000', shard_it_type='LATEST'):
         super(GeoWatchConsumer, self).__init__(client, "consumer", codec, topic)
         self.num_procs = num_procs
@@ -52,3 +55,10 @@ class GeoWatchConsumer(GeoWatchNode):
             group=group,
             shard_id=shard_id,
             shard_it_type=shard_it_type)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args, **kwargs):
+        self.close()
+

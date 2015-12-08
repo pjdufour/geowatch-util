@@ -111,6 +111,13 @@ class GeoWatchBroker(object):
                 for store in self.stores_out:
                     store.write_messages(messages, flush=True)
 
+
+    def close(self):
+        for producer in self.producers:
+            producer.close()
+        for store in self.stores_out:
+            store.close()
+
     def __init__(self, consumers=None, producers=None, stores_in=None, stores_out=None, count=1, timeout=5, threads=1, sleep_period=5, deduplicate=False, filter_last_one=False, verbose=False):
         self.consumers = consumers
         self.producers = producers
@@ -124,3 +131,9 @@ class GeoWatchBroker(object):
         self.filter_last_one = filter_last_one
 
         self.verbose = verbose
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args, **kwargs):
+        self.close()

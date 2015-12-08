@@ -11,11 +11,20 @@ class GeoWatchChannel(object):
     # Private
     _client = None
 
+    def close(self):
+        pass
+
     def __init__(self, client, mode, num_procs=1):
         self._client = client
         self.backend = self._client.backend
         self.mode = mode
         self.num_procs = num_procs
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args, **kwargs):
+        self.close()
 
 
 class GeoWatchChannelTopic(GeoWatchChannel):

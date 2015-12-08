@@ -24,6 +24,9 @@ class GeoWatchStore(object):
         if flush:
             self.flush()
 
+    def close(self):
+        pass
+
     def __init__(self, backend, key, codec, which="all", which_index=0):
         self.backend = backend
         self.key = key
@@ -31,3 +34,9 @@ class GeoWatchStore(object):
         self._codec = build_codec(codec)  # takes in well-known codec name and returns object
         self.which = which
         self.which_index = which_index
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args, **kwargs):
+        self.close()
