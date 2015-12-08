@@ -73,9 +73,6 @@ class GeoWatchCodec(object):
         else:
             return message
 
-    def setChannel(self, channel):
-        self._channel = channel
-
     def __init__(self, channel=None, content_type="text/plain"):
         self._channel = channel
         self.content_type = content_type

@@ -6,7 +6,7 @@ from geowatchutil.codec.geowatch_codec_tilerequest import GeoWatchCodecTileReque
 
 class GeoWatchConsumerTileRequest(GeoWatchConsumer):
 
-    def get_messages(self, count, ttl=60, block=True, timeout=5, now=None):
+    def get_messages(self, count, block=True, timeout=5, ttl=60, now=None):
         now = assert_now(now)
         response = self._get_messages_raw(count, block=block, timeout=timeout)
         if self._client.backend == "kafka":
@@ -50,12 +50,12 @@ class GeoWatchConsumerTileRequest(GeoWatchConsumer):
 
         return messages_decoded
 
-    def __init__(self, client, topic, num_procs, group=None, shard_id=u'shardId-000000000000', shard_it_type='LATEST'):
+    def __init__(self, client, topic, num_procs=1, group=None, shard_id=u'shardId-000000000000', shard_it_type='LATEST'):
         super(GeoWatchConsumerTileRequest, self).__init__(
             client,
+            "tilerequest",
             topic,
-            GeoWatchCodecTileRequest(channel=client.backend),
-            num_procs,
+            num_procs=num_procs,
             group=group,
             shard_id=shard_id,
             shard_it_type=shard_it_type)

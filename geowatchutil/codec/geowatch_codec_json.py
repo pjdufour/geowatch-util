@@ -5,17 +5,17 @@ import json
 
 class GeoWatchCodecJSON(GeoWatchCodec):
 
-    def encode(self, data=None):
+    def encode(self, message):
         """
         Encode message for sending via channel
         """
-        return self.encode_channel(json.dumps(data))
+        return self.encode_channel(json.dumps(message))
 
-    def decode(self, data=None):
+    def decode(self, message):
         """
         Decode message received via channel
         """
-        return json.loads(self.decode_channel(data))
+        return json.loads(self.decode_channel(message))
 
     def pack(self, messages, which="all", which_index=0):
         """

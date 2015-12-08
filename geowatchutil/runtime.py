@@ -1,6 +1,8 @@
 import time
 
-from geowatchutil.factory import create_client_file, create_client_kafka, create_client_kinesis, create_consumer_kafka, create_consumer_kinesis, create_producer
+from geowatchutil.client.factory import create_client_file, create_client_kafka, create_client_kinesis
+from geowatchutil.consumer.factory import create_consumer_kafka, create_consumer_kinesis
+from geowatchutil.factory import create_producer
 
 
 def provision_consumer_file(path, client=None, codec="GeoWatchCodecPlain", topic_check=False, verbose=False):
@@ -118,7 +120,7 @@ def provision_producer(backend, topic=None, codec="GeoWatchCodecPlain", path=Non
                     if not client.check_topic_exists(topic):
                         client.create_topic(topic)
 
-                client, producer = create_producer(backend, topic, codec=codec, client=client)
+                client, producer = build_producer(backend, topic, codec=codec, client=client)
 
         #except:
         #    if verbose:

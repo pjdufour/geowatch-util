@@ -6,17 +6,17 @@ class GeoWatchCodecPlain(GeoWatchCodec):
     GeoWatchCodecPlain is used for encoding/decoding packaing/unpacking plain text
     """
 
-    def encode(self, text=None):
+    def encode(self, message):
         """
         Encode for sending via channel
         """
-        return self.encode_channel(text)
+        return self.encode_channel(message)
 
-    def decode(self, text=None):
+    def decode(self, message):
         """
         Decode messages received via channel
         """
-        return self.decode_channel(text)
+        return self.decode_channel(message)
 
     def pack(self, messages, which="all", which_index=0):
         """

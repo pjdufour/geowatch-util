@@ -11,4 +11,4 @@ class GeoWatchProducerTileRequest(GeoWatchProducer):
         return self.send_messages(messages_encoded)
 
     def __init__(self, client, topic):
-        super(GeoWatchProducerTileRequest, self).__init__(client, topic, GeoWatchCodecTileRequest())
+        super(GeoWatchProducerTileRequest, self).__init__(client, "tilerequest", topic)
