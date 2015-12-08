@@ -1,8 +1,6 @@
 from geowatchutil.base import parse_date, is_expired
 from geowatchutil.consumer.base import GeoWatchConsumer, assert_now
 
-from geowatchutil.codec.geowatch_codec_tilerequest import GeoWatchCodecTileRequest
-
 
 class GeoWatchConsumerTileRequest(GeoWatchConsumer):
 

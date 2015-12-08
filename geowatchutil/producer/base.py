@@ -24,4 +24,3 @@ class GeoWatchProducer(GeoWatchNode):
     def __init__(self, client, codec, topic):
         super(GeoWatchProducer, self).__init__(client, "producer", codec, topic)
         self._channel = build_channel(self._client.backend, topic=topic, mode="producer")
-

@@ -10,7 +10,7 @@ def build_channel(channel, client=None, topic=None, mode=None, num_procs=1, grou
     """
     build_channel returns a GeoWatchChannel object based on the given well-known name
     """
-    channel_lc = channel_lc.lower()
+    channel_lc = channel.lower()
     if channel_lc == "file" or channel_lc == "geowatchchannelfile":
         return GeoWatchChannelFile(client, mode)
     elif channel_lc == "kafka" or channel_lc == "geowatchchannelkafka":

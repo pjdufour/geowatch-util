@@ -41,4 +41,4 @@ class GeoWatchCodecList(GeoWatchCodec):
 
     def __init__(self, channel=None, separator="\t"):
         super(GeoWatchCodecList, self).__init__(channel=channel, content_type="text/plain")
-        this.separator = separator
+        self.separator = separator

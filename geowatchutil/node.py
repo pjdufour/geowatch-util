@@ -1,5 +1,6 @@
 from geowatchutil.codec.factory import build_codec
 
+
 class GeoWatchNode(object):
 
     # Public

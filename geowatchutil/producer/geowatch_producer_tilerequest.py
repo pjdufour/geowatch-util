@@ -1,7 +1,5 @@
 from geowatchutil.producer.base import GeoWatchProducer, assert_now
 
-from geowatchutil.codec.geowatch_codec_tilerequest import GeoWatchCodecTileRequest
-
 
 class GeoWatchProducerTileRequest(GeoWatchProducer):
 

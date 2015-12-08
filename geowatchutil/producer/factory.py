@@ -1,4 +1,7 @@
+from geowatchutil.producer.factory import create_client_file, create_client_kafka, create_client_kinesis
 from geowatchutil.producer.base import GeoWatchProducer
+from geowatchutil.producer.geowatch_producer_tilerequest import GeoWatchProducerTileRequest
+
 
 def build_producer(backend, topic, codec="plain", client=None, path=None, host=None, aws_region=None, aws_access_key_id=None, aws_secret_access_key=None, topic_prefix=""):
     producer = None
