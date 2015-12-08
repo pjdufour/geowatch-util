@@ -1,10 +1,4 @@
 from geowatchutil.base import parse_date
-from geowatchutil.channel.geowatch_channel_file import GeoWatchChannelFile
-from geowatchutil.channel.geowatch_channel_kafka import GeoWatchChannelKafka
-from geowatchutil.channel.geowatch_channel_kinesis import GeoWatchChannelKinesis
-from geowatchutil.channel.geowatch_channel_sns import GeoWatchChannelSNS
-from geowatchutil.channel.geowatch_channel_sqs import GeoWatchChannelSQS
-from geowatchutil.channel.geowatch_channel_slack import GeoWatchChannelSlack
 
 
 def decode_tile_request(a):
@@ -43,32 +37,44 @@ class GeoWatchCodec(object):
 
     def decode_channel(self, message):
         if self._channel == "file":
+            from geowatchutil.channel.geowatch_channel_file import GeoWatchChannelFile
             return GeoWatchChannelFile.decode(message)
         elif self._channel == "kakfa":
+            from geowatchutil.channel.geowatch_channel_kafka import GeoWatchChannelKafka
             return GeoWatchChannelKafka.decode(message)
         elif self._channel == "kinesis":
+            from geowatchutil.channel.geowatch_channel_kinesis import GeoWatchChannelKinesis
             return GeoWatchChannelKinesis.decode(message)
         elif self._channel == "sns":
+            from geowatchutil.channel.geowatch_channel_sns import GeoWatchChannelSNS
             return GeoWatchChannelSNS.decode(message)
         elif self._channel == "sqs":
+            from geowatchutil.channel.geowatch_channel_sqs import GeoWatchChannelSQS
             return GeoWatchChannelSQS.decode(message)
         elif self._channel == "slack":
+            from geowatchutil.channel.geowatch_channel_slack import GeoWatchChannelSlack
             return GeoWatchChannelSlack.decode(message)
         else:
             return message
 
     def encode_channel(self, message):
         if self._channel == "file":
+            from geowatchutil.channel.geowatch_channel_file import GeoWatchChannelFile
             return GeoWatchChannelFile.encode(message)
         elif self._channel == "kakfa":
+            from geowatchutil.channel.geowatch_channel_kafka import GeoWatchChannelKafka
             return GeoWatchChannelKafka.encode(message)
         elif self._channel == "kinesis":
+            from geowatchutil.channel.geowatch_channel_kinesis import GeoWatchChannelKinesis
             return GeoWatchChannelKinesis.encode(message)
         elif self._channel == "sns":
+            from geowatchutil.channel.geowatch_channel_sns import GeoWatchChannelSNS
             return GeoWatchChannelSNS.encode(message)
         elif self._channel == "sqs":
+            from geowatchutil.channel.geowatch_channel_sqs import GeoWatchChannelSQS
             return GeoWatchChannelSQS.encode(message)
         elif self._channel == "slack":
+            from geowatchutil.channel.geowatch_channel_slack import GeoWatchChannelSlack
             return GeoWatchChannelSlack.encode(message)
         else:
             return message

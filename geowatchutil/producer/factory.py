@@ -1,4 +1,4 @@
-from geowatchutil.producer.factory import build_client_file, build_client_kafka, build_client_kinesis, build_client_slack
+from geowatchutil.client.factory import build_client_file, build_client_kafka, build_client_kinesis, build_client_slack
 from geowatchutil.producer.base import GeoWatchProducer
 from geowatchutil.producer.geowatch_producer_tilerequest import GeoWatchProducerTileRequest
 
@@ -8,7 +8,7 @@ def build_producer(backend, topic, codec="plain", client=None, path=None, host=N
     if not client:
         if backend == "file" and path:
             client = build_client_file(path)
-        if backend == "kafka" and host:
+        elif backend == "kafka" and host:
             client = build_client_kafka(host, topic_prefix)
         elif backend == "kinesis" and aws_region and aws_access_key_id and aws_secret_access_key:
             client = build_client_kinesis(aws_region, aws_access_key_id, aws_secret_access_key, topic_prefix)

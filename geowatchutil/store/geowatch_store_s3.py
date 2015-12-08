@@ -41,7 +41,7 @@ class GeoWatchStoreS3(GeoWatchStore):
         return self._client.delete_bucket(Bucket=self.bucket)
 
     def close(self):
-        self._client.close()
+        pass
 
     def __init__(self, key, codec, aws_region=None, aws_access_key_id=None, aws_secret_access_key=None, aws_bucket=None, which="all", which_index=0):
         super(GeoWatchStoreS3, self).__init__("s3", key, codec, which=which, which_index=which_index)
