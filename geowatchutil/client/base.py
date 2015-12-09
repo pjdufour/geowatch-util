@@ -8,12 +8,14 @@ class GeoWatchClient(object):
 
     # Public
     backend = None
+    templates = None
 
     def close(self):
         pass
 
-    def __init__(self, backend=""):
+    def __init__(self, backend="", templates=None):
         self.backend = backend
+        self.templates = templates
 
     def __enter__(self):
         return self
@@ -39,8 +41,8 @@ class GeoWatchClientWebHook(GeoWatchClient):
         response = conn.getresponse()
         return response.read()
 
-    def __init__(self, backend="", authtoken="", url_webhook=""):
-        super(GeoWatchClientWebHook, self).__init__(backend=backend)
+    def __init__(self, backend="", authtoken="", url_webhook="", templates=None):
+        super(GeoWatchClientWebHook, self).__init__(backend=backend, templates=templates)
         self.authtoken = authtoken
         self.url_webhook = url_webhook
 
@@ -50,8 +52,8 @@ class GeoWatchClientStreaming(GeoWatchClient):
     # Private
     _client = None
 
-    def __init__(self, backend=""):
-        super(GeoWatchClientStreaming, self).__init__(backend=backend)
+    def __init__(self, backend="", templates=None):
+        super(GeoWatchClientStreaming, self).__init__(backend=backend, templates=templates)
         self._client = None
 
 
@@ -60,6 +62,6 @@ class GeoWatchClientTopic(GeoWatchClientStreaming):
     # Public
     topic_prefix = ""
 
-    def __init__(self, backend="", topic_prefix=""):
-        super(GeoWatchClientTopic, self).__init__(backend=backend)
+    def __init__(self, backend="", topic_prefix="", templates=None):
+        super(GeoWatchClientTopic, self).__init__(backend=backend, templates=templates)
         self.topic_prefix = topic_prefix

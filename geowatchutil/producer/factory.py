@@ -3,7 +3,8 @@ from geowatchutil.producer.base import GeoWatchProducer
 from geowatchutil.producer.geowatch_producer_tilerequest import GeoWatchProducerTileRequest
 
 
-def build_producer(backend, topic, codec="plain", client=None, path=None, host=None, aws_region=None, aws_access_key_id=None, aws_secret_access_key=None, topic_prefix="", url_webhook="", authtoken=""):
+def build_producer(backend, topic, codec="plain", client=None, path=None, host=None, aws_region=None, aws_access_key_id=None, aws_secret_access_key=None, topic_prefix="", url_webhook="", authtoken="", templates=None):
+    print "build_producer", backend, topic, codec, url_webhook, authtoken
     producer = None
     if not client:
         if backend == "file" and path:
@@ -13,7 +14,7 @@ def build_producer(backend, topic, codec="plain", client=None, path=None, host=N
         elif backend == "kinesis" and aws_region and aws_access_key_id and aws_secret_access_key:
             client = build_client_kinesis(aws_region, aws_access_key_id, aws_secret_access_key, topic_prefix)
         elif backend == "slack" and (url_webhook or authtoken):
-            client = build_client_slack(url_webhook, authtoken)
+            client = build_client_slack(url_webhook, authtoken, templates)
     if client:
         codec_lc = codec.lower()
         if codec_lc == "tile_request" or codec_lc == "geowatchcodectilerequest":

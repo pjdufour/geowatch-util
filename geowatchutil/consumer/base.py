@@ -49,6 +49,7 @@ class GeoWatchConsumer(GeoWatchNode):
 
         self._channel = build_channel(
             self._client.backend,
+            client=self._client,
             topic=topic,
             mode="consumer",
             num_procs=num_procs,

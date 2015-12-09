@@ -102,5 +102,9 @@ class GeoWatchClientSlack(GeoWatchClientWebHook):
             print "No authtoken present."
             return []
 
-    def __init__(self, url_webhook="", authtoken=None):
-        super(GeoWatchClientSlack, self).__init__(backend="slack", url_webhook=url_webhook, authtoken=authtoken)
+    def __init__(self, url_webhook="", authtoken=None, templates=None):
+        super(GeoWatchClientSlack, self).__init__(
+            backend="slack",
+            url_webhook=url_webhook,
+            authtoken=authtoken,
+            templates=templates)

@@ -18,7 +18,7 @@ class GeoWatchNode(object):
         self.topic = topic
 
         # Codec
-        self._codec = build_codec(codec, channel=self._client.backend)
+        self._codec = build_codec(codec, channel=self._client.backend, templates=self._client.templates)
 
         # Channel
         # Set by consumer/producer after GeoWatchNode.__init__
