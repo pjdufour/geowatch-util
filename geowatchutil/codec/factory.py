@@ -3,6 +3,7 @@ from geowatchutil.codec.geowatch_codec_list import GeoWatchCodecList
 from geowatchutil.codec.geowatch_codec_json import GeoWatchCodecJSON
 from geowatchutil.codec.geowatch_codec_geojson import GeoWatchCodecGeoJSON
 from geowatchutil.codec.geowatch_codec_tilerequest import GeoWatchCodecTileRequest
+from geowatchutil.codec.geowatch_codec_templated import GeoWatchCodecTemplated
 from geowatchutil.codec.geowatch_codec_slack import GeoWatchCodecSlack
 
 
@@ -19,6 +20,8 @@ def build_codec(codec, channel=None, templates=None):
         return GeoWatchCodecList(channel=channel, separator="\t")
     elif codec_lc == "geojson" or codec_lc == "geowatchcodecgeojson":
         return GeoWatchCodecGeoJSON(channel=channel)
+    elif codec_lc == "templated" or codec_lc == "geowatchcodectemplated":
+        return GeoWatchCodecTemplated(channel=channel, templates=templates)
     elif codec_lc == "slack" or codec_lc == "geowatchcodecslack":
         return GeoWatchCodecSlack(channel=channel, templates=templates)
     else:

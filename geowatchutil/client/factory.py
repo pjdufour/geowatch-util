@@ -17,6 +17,16 @@ def build_client_kinesis(aws_region, aws_access_key_id, aws_secret_access_key, t
         topic_prefix=topic_prefix)
 
 
+def build_client_sns(aws_region, aws_access_key_id, aws_secret_access_key, topic_prefix, templates):
+    from geowatchutil.client.geowatch_client_sns import GeoWatchClientSNS
+    return GeoWatchClientSNS(
+        aws_region=aws_region,
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        topic_prefix=topic_prefix,
+        templates=templates)
+
+
 def build_client_slack(url_webhook, authtoken, templates):
     from geowatchutil.client.geowatch_client_slack import GeoWatchClientSlack
     return GeoWatchClientSlack(url_webhook=url_webhook, authtoken=authtoken, templates=templates)

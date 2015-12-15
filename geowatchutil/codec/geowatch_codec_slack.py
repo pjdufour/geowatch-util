@@ -96,5 +96,5 @@ class GeoWatchCodecSlack(GeoWatchCodecJSON):
         raise GeoWatchError("Cannot unpack slack messages")
 
     def __init__(self, channel=None, templates=None):
-        super(GeoWatchCodecJSON, self).__init__(channel=channel, content_type="application/json")
+        super(GeoWatchCodecSlack, self).__init__(channel=channel, content_type="application/json")
         self.templates = templates

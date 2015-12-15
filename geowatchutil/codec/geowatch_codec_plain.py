@@ -37,5 +37,5 @@ class GeoWatchCodecPlain(GeoWatchCodec):
         """
         return data.split("\n")
 
-    def __init__(self, channel=None):
-        super(GeoWatchCodecPlain, self).__init__(channel=channel, content_type="text/plain")
+    def __init__(self, channel=None, content_type="text/plain"):
+        super(GeoWatchCodecPlain, self).__init__(channel=channel, content_type=content_type)
