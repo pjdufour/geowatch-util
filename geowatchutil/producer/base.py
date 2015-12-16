@@ -13,12 +13,18 @@ def assert_now(now):
 class GeoWatchProducer(GeoWatchNode):
 
     def send_message(self, message):
-        return self._channel.send_message(self._codec.encode(message))
+        if self._client.templates: 
+            return self._channel.send_message(self._codec.render(message))
+        else:
+            return self._channel.send_message(self._codec.encode(message))
 
     def send_messages(self, messages):
         messages_encoded = []
         for message in messages:
-            messages_encoded.append(self._codec.encode(message))
+            if self._client.templates: 
+                messages_encoded.append(self._codec.render(message))
+            else:
+                messages_encoded.append(self._codec.encode(message))
         return self._channel.send_messages(messages_encoded)
 
     def close(self):

@@ -31,6 +31,7 @@ class GeoWatchCodec(object):
 
     # Public
     content_type = "text/plain"
+    templates = None
 
     # Private
     _channel = None
@@ -79,6 +80,20 @@ class GeoWatchCodec(object):
         else:
             return message
 
-    def __init__(self, channel=None, content_type="text/plain"):
+
+    def find_template(self, message):
+        t = None
+        for candidate in self.templates:
+            print "GeoWatchCodec.find_templates candidate: ", candidate
+            action = message["template"]["actiontype"]
+            resource = message["template"]["resourcetype"]
+            if action in candidate["actions"] and resource in candidate["resources"]:
+                t = candidate["template"]
+                break
+        return t
+
+
+    def __init__(self, channel=None, content_type="text/plain", templates=None):
         self._channel = channel
         self.content_type = content_type
+        self.templates = templates

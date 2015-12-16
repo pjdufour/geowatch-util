@@ -1,3 +1,5 @@
+import copy
+
 from geowatchutil.codec.base import GeoWatchCodec
 
 
@@ -37,5 +39,12 @@ class GeoWatchCodecPlain(GeoWatchCodec):
         """
         return data.split("\n")
 
-    def __init__(self, channel=None, content_type="text/plain"):
-        super(GeoWatchCodecPlain, self).__init__(channel=channel, content_type=content_type)
+    def render(self, message):
+        """
+        Render template for sending via channel
+        """
+        t = self.find_template(message)
+        return self.encode_channel(copy.deepcopy(t).format(** message))
+
+    def __init__(self, channel=None, content_type="text/plain", templates=None):
+        super(GeoWatchCodecPlain, self).__init__(channel=channel, content_type=content_type, templates=templates)
