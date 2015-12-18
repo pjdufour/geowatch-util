@@ -1,3 +1,7 @@
+"""
+This module includes base classes for GeoWatch clients
+"""
+
 # from httplib import HTTPConnection
 from httplib import HTTPSConnection
 from urlparse import urlsplit
@@ -5,6 +9,9 @@ import urllib2
 
 
 class GeoWatchClient(object):
+    """
+    Base GeoWatch Client class.  Extended by others.
+    """
 
     # Public
     backend = None
