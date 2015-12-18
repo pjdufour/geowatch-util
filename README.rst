@@ -1,85 +1,95 @@
-
-![Build Status](https://travis-ci.org/geowatch/geowatch-util.png)
-
-[Check Build Status](https://travis-ci.org/geowatch/geowatch-util) |
----- |
-
 GeoWatch Util (geowatch-util)
-================
+==========
 
-## Description
+.. image:: https://travis-ci.org/geowatch/geowatch-util.png
+    :target: https://travis-ci.org/geowatch/geowatch-util
+
+.. image:: https://img.shields.io/pypi/v/geowatch-util.svg
+    :target: https://pypi.python.org/pypi/geowatch-util
+
+.. image:: https://readthedocs.org/projects/geowatch-util/badge/?version=master
+        :target: http://geowatch-util.readthedocs.org/en/latest/
+        :alt: Master Documentation Status
+
+Description
+-----------
 
 Utility library for GeoWatch, a spatially-enabled distributed message broker.
 
-## Installation
+Installation
+------------
 
-### AWS
+TBD
 
-### Apache Kafka
+**AWS**
+
+**Apache Kafka**
 
 For using Apache Kafka, you'll need to do something similar to the following:
 
-```
-apt-get update
-apt-get install -y curl vim git
-apt-get install -y zookeeperd
-```
+.. code-block:: bash
+
+    apt-get update
+    apt-get install -y curl vim git
+    apt-get install -y zookeeperd
 
 and then:
 
-```
-cd ~
-wget 'http://apache.cs.utah.edu/kafka/0.8.2.0/kafka_2.10-0.8.2.0.tgz' -O 'kafka_2.10-0.8.2.0.tgz'
-tar -xzvf kafka_2.10-0.8.2.0.tgz
-cd kafka_2.10-0.8.2.0
-# Change zookeeper port to 8002
-# vim config/zookeeper.properties
-# vim config/server.properties
-```
+.. code-block:: bash
 
-## Usage
+    cd ~
+    wget 'http://apache.cs.utah.edu/kafka/0.8.2.0/kafka_2.10-0.8.2.0.tgz' -O 'kafka_2.10-0.8.2.0.tgz'
+    tar -xzvf kafka_2.10-0.8.2.0.tgz
+    cd kafka_2.10-0.8.2.0
+    # Change zookeeper port to 8002
+    # vim config/zookeeper.properties
+    # vim config/server.properties
 
-### Apache Kafka
+Usage
+-----
+
+**Apache Kafka**
 
 If you are using Apache Kafka as a channel, the following might be helpful.  Set up topics, such as the following, with:
 
-```
-# Set up topics
-bin/kafka-topics.sh --create --zookeeper localhost:8002 --replication-factor 1 --partitions 1 --topic requests
-bin/kafka-topics.sh --create --zookeeper localhost:8002 --replication-factor 1 --partitions 1 --topic writeback
-bin/kafka-topics.sh --create --zookeeper localhost:8002 --replication-factor 1 --partitions 1 --topic statistics
-```
+.. code-block:: bash
+
+    # Set up topics
+    bin/kafka-topics.sh --create --zookeeper localhost:8002 --replication-factor 1 --partitions 1 --topic TOPICNAME1
+    bin/kafka-topics.sh --create --zookeeper localhost:8002 --replication-factor 1 --partitions 1 --topic TOPICNAME2
+    bin/kafka-topics.sh --create --zookeeper localhost:8002 --replication-factor 1 --partitions 1 --topic TOPICNAME3
 
 
 Test that GeoWatch is pushing messages properly into the Kafka channel with:
 
-```
-# Listen to topics
-bin/kafka-console-consumer.sh --zookeeper localhost:8002 --topic requests --from-beginning
-```
+.. code-block:: bash
 
-### AWS Kinesis
+    # Listen to topics
+    bin/kafka-console-consumer.sh --zookeeper localhost:8002 --topic TOPICNAME1 --from-beginning
 
-TBD
-
-
-### AWS SNS
+**AWS Kinesis**
 
 TBD
 
-### AWS SQS
+**AWS SNS**
 
 TBD
 
-### Slack
+**AWS SQS**
 
 TBD
 
-## Contributing
+**Slack**
 
-We are currently accepting pull requests for this repository. Please provide a human-readable description with a pull request and update the README.md file as needed.
+TBD
 
-## License
+Contributing
+------------
+
+We are currently accepting pull requests for this repository. Please provide a human-readable description with a pull request and update the README.rst file as needed.
+
+License
+-------
 
 Copyright (c) 2015, Patrick Dufour
 All rights reserved.

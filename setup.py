@@ -12,7 +12,7 @@ setup(
     url='https://github.com/geowatch/geowatch-util/',
     keywords='python gis geowatch',
     description='A python utility library for GeoWatch',
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
     download_url="https://github.com/geowatch/geowatch-util/zipball/master",
     #py_modules=["geowatchutil"],
     packages=[
