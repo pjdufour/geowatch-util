@@ -9,10 +9,11 @@ Welcome to GeoWatch Util's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
 
-   Getting started </getting-started>
-   Source Code Modules </source-code/modules>
+   Installation </installation>
+   Getting Started </getting-started>
+   Source Code </source-code>
 
 Indices and tables
 ==================

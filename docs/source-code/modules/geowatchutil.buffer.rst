@@ -4,14 +4,9 @@ geowatchutil.buffer package
 Submodules
 ----------
 
-geowatchutil.buffer.base module
--------------------------------
+.. toctree::
 
-.. automodule:: geowatchutil.buffer.base
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   geowatchutil.buffer.base
 
 Module contents
 ---------------

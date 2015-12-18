@@ -4,14 +4,9 @@ geowatchutil.tests package
 Submodules
 ----------
 
-geowatchutil.tests.test module
-------------------------------
+.. toctree::
 
-.. automodule:: geowatchutil.tests.test
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   geowatchutil.tests.test
 
 Module contents
 ---------------

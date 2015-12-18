@@ -4,14 +4,9 @@ geowatchutil.broker package
 Submodules
 ----------
 
-geowatchutil.broker.base module
--------------------------------
+.. toctree::
 
-.. automodule:: geowatchutil.broker.base
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   geowatchutil.broker.base
 
 Module contents
 ---------------

@@ -4,70 +4,16 @@ geowatchutil.codec package
 Submodules
 ----------
 
-geowatchutil.codec.base module
-------------------------------
+.. toctree::
 
-.. automodule:: geowatchutil.codec.base
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-geowatchutil.codec.factory module
----------------------------------
-
-.. automodule:: geowatchutil.codec.factory
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-geowatchutil.codec.geowatch_codec_geojson module
-------------------------------------------------
-
-.. automodule:: geowatchutil.codec.geowatch_codec_geojson
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-geowatchutil.codec.geowatch_codec_json module
----------------------------------------------
-
-.. automodule:: geowatchutil.codec.geowatch_codec_json
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-geowatchutil.codec.geowatch_codec_list module
----------------------------------------------
-
-.. automodule:: geowatchutil.codec.geowatch_codec_list
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-geowatchutil.codec.geowatch_codec_plain module
-----------------------------------------------
-
-.. automodule:: geowatchutil.codec.geowatch_codec_plain
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-geowatchutil.codec.geowatch_codec_slack module
-----------------------------------------------
-
-.. automodule:: geowatchutil.codec.geowatch_codec_slack
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-geowatchutil.codec.geowatch_codec_tilerequest module
-----------------------------------------------------
-
-.. automodule:: geowatchutil.codec.geowatch_codec_tilerequest
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   geowatchutil.codec.base
+   geowatchutil.codec.factory
+   geowatchutil.codec.geowatch_codec_geojson
+   geowatchutil.codec.geowatch_codec_json
+   geowatchutil.codec.geowatch_codec_list
+   geowatchutil.codec.geowatch_codec_plain
+   geowatchutil.codec.geowatch_codec_slack
+   geowatchutil.codec.geowatch_codec_tilerequest
 
 Module contents
 ---------------

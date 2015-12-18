@@ -4,30 +4,11 @@ geowatchutil.consumer package
 Submodules
 ----------
 
-geowatchutil.consumer.base module
----------------------------------
+.. toctree::
 
-.. automodule:: geowatchutil.consumer.base
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-geowatchutil.consumer.factory module
-------------------------------------
-
-.. automodule:: geowatchutil.consumer.factory
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-geowatchutil.consumer.geowatch_consumer_tilerequest module
-----------------------------------------------------------
-
-.. automodule:: geowatchutil.consumer.geowatch_consumer_tilerequest
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   geowatchutil.consumer.base
+   geowatchutil.consumer.factory
+   geowatchutil.consumer.geowatch_consumer_tilerequest
 
 Module contents
 ---------------
