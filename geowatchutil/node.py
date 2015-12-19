@@ -1,8 +1,13 @@
+"""
+Includes base node classes
+"""
 from geowatchutil.codec.factory import build_codec
 
 
 class GeoWatchNode(object):
-
+    """
+    GeoWatchNode is the base class for producers and consumers
+    """
     # Public
     topic = None
     mode = None

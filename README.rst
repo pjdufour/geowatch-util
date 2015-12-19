@@ -19,7 +19,10 @@ Utility library for GeoWatch, a spatially-enabled distributed message broker.
 Installation
 ------------
 
-TBD
+.. code-block:: bash
+
+    pip install git+git://github.com/geowatch/geowatch-util.git@master
+
 
 **AWS**
 

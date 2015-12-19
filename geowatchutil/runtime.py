@@ -1,3 +1,6 @@
+"""
+Provides runtime functions.  These functions wrap factory functions with exception handling and timeouts.
+"""
 import time
 
 from geowatchutil.client.factory import create_client_file, create_client_kafka, create_client_kinesis
@@ -6,6 +9,9 @@ from geowatchutil.factory import build_producer
 
 
 def provision_consumer_file(path, client=None, codec="GeoWatchCodecPlain", topic_check=False, verbose=False):
+    """
+    Provision File Consumer
+    """
     return _provision_consumer(
         "file",
         None,
@@ -18,6 +24,9 @@ def provision_consumer_file(path, client=None, codec="GeoWatchCodecPlain", topic
 
 
 def provision_consumer_kafka(host=None, client=None, topic=None, codec="GeoWatchCodecPlain", topic_prefix="", max_tries=12, timeout=5, sleep_period=5, topic_check=False, verbose=False):
+    """
+    Provision Kafka Consumer
+    """
     return _provision_consumer(
         "kafka",
         topic,
@@ -34,6 +43,9 @@ def provision_consumer_kafka(host=None, client=None, topic=None, codec="GeoWatch
 
 
 def provision_consumer_kinesis(topic=None, codec="GeoWatchCodecPlain", aws_region=None, aws_access_key_id=None, aws_secret_access_key=None, shard_id='shardId-000000000000', shard_it_type="LATEST", client=None, topic_prefix="", max_tries=12, timeout=5, sleep_period=5, topic_check=False, verbose=False):
+    """
+    Provision Kinesis Consumer
+    """
     return _provision_consumer(
         "kinesis",
         topic,

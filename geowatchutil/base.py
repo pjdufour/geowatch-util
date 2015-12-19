@@ -1,3 +1,6 @@
+"""
+Base classes and functions used throughout GeoWatch libraries
+"""
 import datetime
 import dateutil.parser
 
@@ -8,6 +11,9 @@ FORMAT_TILE_REQUEST_LOG = "{status}	{tileorigin}	{tilesource}	{z}	{x}	{y}	{ext}	
 
 
 def parse_date(date_string):
+    """
+    parses date string to datetime object
+    """
     d = None
     try:
         d = dateutil.parser.parse(date_string)
@@ -17,10 +23,16 @@ def parse_date(date_string):
 
 
 def is_expired(date, now, ttl):
+    """
+    is date expired
+    """
     return now >= (date + datetime.timedelta(seconds=ttl))
 
 
 class GeoWatchError(Exception):
+    """
+    generic error used throughout GeoWatch
+    """
 
     def __init__(self, * args, ** kwargs):
         super(GeoWatchError, self).__init__(self, * args, ** kwargs)
