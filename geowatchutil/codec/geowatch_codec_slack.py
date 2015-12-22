@@ -20,7 +20,7 @@ class GeoWatchCodecSlack(GeoWatchCodecJSON):
                 break
         return t
 
-    def encode(self, message):
+    def encode(self, message, **kwargs):
         """
         Encode message for sending via channel
         """

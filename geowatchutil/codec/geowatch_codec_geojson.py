@@ -6,7 +6,7 @@ from geowatchutil.codec.base import GeoWatchCodec
 
 class GeoWatchCodecGeoJSON(GeoWatchCodec):
 
-    def encode(self, message):
+    def encode(self, message, **kwargs):
         """
         Encode message for sending via channel
         - message in format FeatureCollection
@@ -43,5 +43,5 @@ class GeoWatchCodecGeoJSON(GeoWatchCodec):
         messages = package['mesages']
         return [geojson.loads(m) for m in messages]
 
-    def __init__(self, channel=None):
-        super(GeoWatchCodecGeoJSON, self).__init__(channel=channel, content_type="application/json")
+    def __init__(self, channel=None, content_type="application/json"):
+        super(GeoWatchCodecGeoJSON, self).__init__(channel=channel, content_type=content_type)

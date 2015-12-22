@@ -1,14 +1,16 @@
-from geowatchutil.store.geowatch_store_s3 import GeoWatchStoreS3
-
-
-def build_store(backend, key, codec, aws_region=None, aws_access_key_id=None, aws_secret_access_key=None, aws_bucket=None):
-
-    if backend == "s3":
-        return GeoWatchStoreS3(
-            key,
-            codec,
-            aws_region=aws_region,
-            aws_access_key_id=aws_access_key_id,
-            aws_secret_access_key=aws_secret_access_key,
-            aws_bucket=aws_bucket)
+def build_store(backend, key, codec, **kwargs):
+    store = None
+    if backend == "file":
+        from geowatchutil.store.geowatch_store_file import GeoWatchStoreFile
+        return GeoWatchStoreFile(key, codec, **kwargs)
+    elif backend == "s3":
+        from geowatchutil.store.geowatch_store_s3 import GeoWatchStoreS3
+        return GeoWatchStoreS3(key, codec, **kwargs)
+    #elif backend == "memcached"
+    #    from geowatchutil.store.geowatch_store_memcached import GeoWatchStoreMemcached
+    #    return GeoWatchStoreMemcached(key, codec, **kwargs)
+    elif backend == "wfs":
+        from geowatchutil.store.geowatch_store_wfs import GeoWatchStoreWFS
+        return GeoWatchStoreWFS(key, codec, **kwargs)
+    return store
 

@@ -55,6 +55,9 @@ class GeoWatchCodec(object):
         elif self._channel == "slack":
             from geowatchutil.channel.geowatch_channel_slack import GeoWatchChannelSlack
             return GeoWatchChannelSlack.decode(message)
+        elif self._channel == "wfs":
+            from geowatchutil.channel.geowatch_channel_wfs import GeoWatchChannelWFS
+            return GeoWatchChannelWFS.decode(message)
         else:
             return message
 
@@ -77,6 +80,9 @@ class GeoWatchCodec(object):
         elif self._channel == "slack":
             from geowatchutil.channel.geowatch_channel_slack import GeoWatchChannelSlack
             return GeoWatchChannelSlack.encode(message)
+        elif self._channel == "wfs":
+            from geowatchutil.channel.geowatch_channel_wfs import GeoWatchChannelWFS
+            return GeoWatchChannelWFS.encode(message)
         else:
             return message
 

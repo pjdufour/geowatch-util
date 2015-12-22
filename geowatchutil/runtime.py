@@ -3,10 +3,6 @@ Provides runtime functions.  These functions wrap factory functions with excepti
 """
 import time
 
-from geowatchutil.client.factory import create_client_file, create_client_kafka, create_client_kinesis
-from geowatchutil.consumer.factory import create_consumer_kafka, create_consumer_kinesis
-from geowatchutil.factory import build_producer
-
 
 def provision_consumer_file(path, client=None, codec="GeoWatchCodecPlain", topic_check=False, verbose=False):
     """
@@ -73,10 +69,13 @@ def _provision_consumer(backend, topic, codec="GeoWatchCodecPlain", path=None, h
         if 1 == 1:
             if not client:
                 if backend == "file":
+                    from geowatchutil.client.factory import create_client_file
                     client = create_client_file(path)
                 elif backend == "kafka":
+                    from geowatchutil.client.factory import create_client_kafka
                     client = create_client_kafka(host, topic_prefix)
                 elif backend == "kinesis":
+                    from geowatchutil.client.factory import create_client_kinesis
                     client = create_client_kinesis(aws_region, aws_access_key_id, aws_secret_access_key, topic_prefix)
 
             if client:
@@ -85,12 +84,14 @@ def _provision_consumer(backend, topic, codec="GeoWatchCodecPlain", path=None, h
                         client.create_topic(topic)
 
                 if backend == "kafka":
+                    from geowatchutil.consumer.factory import create_consumer_kafka
                     client, consumer = create_consumer_kafka(
                         topic,
                         codec=codec,
                         client=client,
                         num_procs=4)
                 elif backend == "kinesis":
+                    from geowatchutil.consumer.factory import create_consumer_kinesis
                     client, consumer = create_consumer_kinesis(
                         topic,
                         codec=codec,
@@ -113,26 +114,33 @@ def _provision_consumer(backend, topic, codec="GeoWatchCodecPlain", path=None, h
     return (client, consumer)
 
 
-def provision_producer(backend, topic=None, codec="GeoWatchCodecPlain", path=None, host=None, aws_region=None, aws_access_key_id=None, aws_secret_access_key=None, client=None, topic_prefix="", max_tries=12, timeout=5, sleep_period=5, topic_check=False, verbose=False):
+#def provision_producer(backend, topic=None, codec="GeoWatchCodecPlain", path=None, host=None, aws_region=None, aws_access_key_id=None, aws_secret_access_key=None, client=None, topic_prefix="", max_tries=12, timeout=5, sleep_period=5, topic_check=False, url=None, auth_user=None, auth_password=None, verbose=False):
+def provision_producer(backend, **kwargs):
     producer = None
+
+    verbose = kwargs.get('verbose', False)
+    max_tries = kwargs.get('max_tries', 12)
+    sleep_period = kwargs.get('sleep_period', 5)
+    client = kwargs.get('client', None)
+    codec = kwargs.get('codec', None)
+    topic = kwargs.get('topic', None)
+    topic_check = kwargs.get('topic_check', False)
+
     tries = 0
     while tries < max_tries:
         # try:
         if 1 == 1:
             if not client:
-                if backend == "file":
-                    client = create_client_file(path)
-                elif backend == "kafka":
-                    client = create_client_kafka(host, topic_prefix)
-                elif backend == "kinesis":
-                    client = create_client_kinesis(aws_region, aws_access_key_id, aws_secret_access_key, topic_prefix)
+                from geowatchutil.client.factory import build_client
+                client = build_client(backend, **kwargs)
 
             if client:
                 if topic and topic_check:
                     if not client.check_topic_exists(topic):
                         client.create_topic(topic)
 
-                client, producer = build_producer(backend, topic, codec=codec, client=client)
+                from geowatchutil.producer.factory import build_producer
+                producer = build_producer(client, codec, topic)
 
         #except:
         #    if verbose:
@@ -146,3 +154,31 @@ def provision_producer(backend, topic=None, codec="GeoWatchCodecPlain", path=Non
         tries += 1
         time.sleep(sleep_period)
     return (client, producer)
+
+
+def provision_store(backend, key, codec, **kwargs):
+    store = None
+
+    verbose = kwargs.get('verbose', False)
+    max_tries = kwargs.get('max_tries', 12)
+    sleep_period = kwargs.get('sleep_period', 5)
+
+    tries = 0
+    while tries < max_tries:
+        # try:
+        if 1 == 1:
+            from geowatchutil.store.factory import build_store
+            store = build_store(backend, key, codec, **kwargs)
+
+        #except:
+        #    if verbose:
+        #        print "Could not get lock on GeoWatch server. Try "+str(tries)+"."
+        #    client = None
+        #    producer = None
+
+        if store:
+            break
+
+        tries += 1
+        time.sleep(sleep_period)
+    return store

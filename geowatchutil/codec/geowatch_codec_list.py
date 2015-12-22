@@ -8,7 +8,7 @@ class GeoWatchCodecList(GeoWatchCodec):
 
     separator = "\t"
 
-    def encode(self, message):
+    def encode(self, message, **kwargs):
         """
         Encode for sending via channel
         """

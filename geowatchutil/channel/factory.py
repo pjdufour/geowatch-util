@@ -21,3 +21,6 @@ def build_channel(channel, client=None, topic=None, mode=None, num_procs=1, grou
     elif channel_lc == "slack" or channel_lc == "geowatchchannelslack":
         from geowatchutil.channel.geowatch_channel_slack import GeoWatchChannelSlack
         return GeoWatchChannelSlack(client, topic, mode)
+    elif channel_lc == "wfs" or channel_lc == "geowatchchannelwfs":
+        from geowatchutil.channel.geowatch_channel_wfs import GeoWatchChannelWFS
+        return GeoWatchChannelWFS(client, topic, mode)

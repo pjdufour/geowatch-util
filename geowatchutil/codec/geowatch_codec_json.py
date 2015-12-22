@@ -5,7 +5,7 @@ import json
 
 class GeoWatchCodecJSON(GeoWatchCodec):
 
-    def encode(self, message):
+    def encode(self, message, **kwargs):
         """
         Encode message for sending via channel
         """
