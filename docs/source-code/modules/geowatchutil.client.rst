@@ -13,6 +13,7 @@ Submodules
    geowatchutil.client.geowatch_client_kinesis
    geowatchutil.client.geowatch_client_slack
    geowatchutil.client.geowatch_client_sns
+   geowatchutil.client.geowatch_client_wfs
 
 Module contents
 ---------------

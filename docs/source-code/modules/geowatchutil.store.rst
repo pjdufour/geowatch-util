@@ -11,6 +11,7 @@ Submodules
    geowatchutil.store.geowatch_store_file
    geowatchutil.store.geowatch_store_memcached
    geowatchutil.store.geowatch_store_s3
+   geowatchutil.store.geowatch_store_wfs
 
 Module contents
 ---------------

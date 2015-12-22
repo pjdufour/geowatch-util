@@ -5,6 +5,8 @@ First, install geowatch-util via pip.
 
 If using Django, consider using geowatch-django, too.  GeoWatch Django provides a consistent way to provision geowatch objects based on Django settings.  Therefore, you don't need to create your own settings.
 
+Below is a list of simple patterns for provisioning consumers, producers, and stores by using the functions in `runtime.py`.  More complex provisioing routines can be executed by directly calling the respective factory.py functions `build_client`, `build_consumer`, `build_producer`, and `build_stores`.
+
 
 Consumers
 ---------
@@ -13,18 +15,49 @@ Consumers retrieve and decode messages from an external channel, such as AWS Kin
 
 Currently supported channels include: Apache Kafka, AWS Kinesis, and AWS SQS.
 
+Consumers user the runtime method provision_consumer.
+
+**Apache Kafka**
+
+.. code-block:: python
+
+    from geowatchutil.runtime import provision_consumer
+
+    client, consumer = provision_consumer(
+        "kafka",
+        host=None,
+        topic=None,
+        codec="plain",
+        topic_prefix="",
+        max_tries=12,
+        timeout=5,
+        sleep_period=5,
+        topic_check=False,
+        verbose=False):
+
+
+**AWS Kinesis**
+
 .. code-block:: python
 
     from geowatchutil.runtime import provision_consumer_kafka
 
-    provision_consumer_kafka(host=None, client=None, topic=None, codec="GeoWatchCodecPlain", topic_prefix="", max_tries=12, timeout=5, sleep_period=5, topic_check=False, verbose=False):
-
-
-.. code-block:: python
-
-    from geowatchutil.runtime import provision_consumer_kafka
-
-    provision_consumer_kinesis(topic=None, codec="GeoWatchCodecPlain", aws_region=None, aws_access_key_id=None, aws_secret_access_key=None, shard_id='shardId-000000000000', shard_it_type="LATEST", client=None, topic_prefix="", max_tries=12, timeout=5, sleep_period=5, topic_check=False, verbose=False):
+    client, consumer = provision_consumer(
+        "kinesis",
+        topic=None,
+        codec="GeoWatchCodecPlain",
+        aws_region=None,
+        aws_access_key_id=None,
+        aws_secret_access_key=None,
+        shard_id='shardId-000000000000',
+        shard_it_type="LATEST",
+        client=None,
+        topic_prefix="",
+        max_tries=12,
+        timeout=5,
+        sleep_period=5,
+        topic_check=False,
+        verbose=False):
 
 
 Producers
@@ -34,11 +67,13 @@ Producers generate messages.  GeoWatch has a variety of codec for messages, such
 
 Currently supported channels include: Apache Kafka, AWS Kinesis, AWS SQS, AWS SNS, and Slack.
 
+Producers user the runtime method provision_producer.
+
 .. code-block:: python
 
     from geowatchutil.runtime import provision_producer
 
-    provision_producer(
+    client, producer = provision_producer(
         backend,
         topic=None,
         codec="GeoWatchCodecPlain",
@@ -60,23 +95,30 @@ Stores
 
 Stores are used for persistant non-streaming storage of messages.  They can include file, document, or memory storage.  For example, dumping all message traffic to an AWS S3 object for long-term storage.  Or buffering the latest batch of messages in memcached for analysis across a multi-tenant infrastructure.
 
+Stores use the runtime method provision_store.
+
 **File Store**
 
 .. code-block:: python
 
-    from geowatchutil.store.geowatch_store_file import GeoWatchStoreFile
+    from geowatchutil.store.factory import provision_store
 
-    store_file = GeoWatchStoreFile(settings.STATS_REQUEST_FILE, "GeoWatchCodecJSON", which="first")
+    store_file = provision_store(
+        "file",
+        settings.STATS_REQUEST_FILE,
+        "json",
+        which="first")
 
 **S3 Store**
 
 .. code-block:: python
 
-    from geowatchutil.store.geowatch_store_s3 import GeoWatchStoreS3
+    from geowatchutil.store.factory import provision_store
 
-    store_s3 = GeoWatchStoreS3(
+    store_s3 = provision_store(
+        "s3"
         "final_stats.json",
-        "GeoWatchCodecJSON",
+        "json",
         aws_region=settings.AWS_REGION,
         aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
         aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
@@ -87,17 +129,31 @@ Stores are used for persistant non-streaming storage of messages.  They can incl
 
 .. code-block:: python
 
-    from geowatchutil.store.geowatch_store_memcached import GeoWatchStoreMemcached
+    from geowatchutil.store.factory import provision_store
 
-    store_memcached = GeoWatchStoreMemcached(
-        "stats_tilerequests",
-        "GeoWatchCodecJSON",
+    store_memcached = provision_store(
+        "memcached",
+        "stats.json",
+        "json",
         client_type="umemcache",
         which="first",
         host="localhost",
         port=11211)
 
-    stores_out = [store_file, store_s3, store_memcached]
+
+**WFS Store**
+
+.. code-block:: python
+
+    from geowatchutil.store.factory import provision_store
+
+    store_wfs = provision_store(
+        "wfs",
+        key,
+        "wfs",
+        url="http://geonode.org/geoserver/geonode/wfs/"
+        auth_user="admin",
+        auth_password="admin")
 
 Brokers
 -------

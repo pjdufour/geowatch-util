@@ -14,6 +14,7 @@ Submodules
    geowatchutil.channel.geowatch_channel_slack
    geowatchutil.channel.geowatch_channel_sns
    geowatchutil.channel.geowatch_channel_sqs
+   geowatchutil.channel.geowatch_channel_wfs
 
 Module contents
 ---------------

@@ -14,6 +14,7 @@ Submodules
    geowatchutil.codec.geowatch_codec_plain
    geowatchutil.codec.geowatch_codec_slack
    geowatchutil.codec.geowatch_codec_tilerequest
+   geowatchutil.codec.geowatch_codec_wfs
 
 Module contents
 ---------------
