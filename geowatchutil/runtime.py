@@ -5,6 +5,31 @@ import time
 
 
 def provision_consumer(backend, **kwargs):
+    """
+    Provision a new GeoWatch consumer.
+    
+    ``backend`` is either: 'kafka', 'kinesis', 'sns', or 'sqs'.
+    
+    If ``client=None`` in ``kwargs``, :meth:`provision_consumer` will create a client.
+
+    :meth:`provision_consumer` returns a tuple ``(client, consumer)``.
+
+    **Examples**
+
+    .. code-block:: python
+
+        from geowatchutil.runtime import provision_consumer
+
+        client, consumer = provision_consumer('kafka', host="localhost")
+
+        client, consumer = provision_consumer(
+            'kinesis',
+            aws_region=aws_region,
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key,
+            topic_prefix=topic_prefix)
+
+    """
     consumer = None
 
     verbose = kwargs.get('verbose', False)
@@ -48,6 +73,32 @@ def provision_consumer(backend, **kwargs):
 
 
 def provision_producer(backend, **kwargs):
+    """
+    Provision a new GeoWatch Producer.
+
+    ``backend`` is either: 'kafka', 'kinesis', 'sns', or 'sqs'.
+    
+    If ``client=None`` in ``kwargs``, :meth:`provision_producer` will create a client.
+
+    :meth:`provision_producer` returns a tuple ``(client, producer)``.
+
+    **Examples**
+
+    .. code-block:: python
+
+        from geowatchutil.runtime import provision_producer
+
+        client, consumer = provision_producer('kafka', host="localhost")
+
+        client, consumer = provision_producer(
+            'kinesis',
+            aws_region=aws_region,
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key,
+            topic_prefix=topic_prefix)
+
+    """
+
     producer = None
 
     verbose = kwargs.get('verbose', False)
@@ -89,6 +140,32 @@ def provision_producer(backend, **kwargs):
 
 
 def provision_store(backend, key, codec, **kwargs):
+    """
+    Provision a new GeoWatch store.
+    
+    ``backend`` is either: 'file', 'memcached', 's3', or 'wfs'.
+
+    ``codec`` is either: 'plain', 'json', 'tilerequest', or 'wfs'.
+    
+    :meth:`provision_store` returns a ``store``.
+
+    **Examples**
+
+    .. code-block:: python
+
+        from geowatchutil.runtime import provision_store
+
+        store = provision_store(
+            's3',
+            'results.json',
+            'json',
+            aws_region=aws_region,
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key,
+            aws_bucket=aws_bucket)
+
+    """
+
     store = None
 
     verbose = kwargs.get('verbose', False)
@@ -114,3 +191,96 @@ def provision_store(backend, key, codec, **kwargs):
         tries += 1
         time.sleep(sleep_period)
     return store
+
+
+def provision_brokers(watchlist, actiontype=None, resourcetype=None):
+    """
+    Provision new GeoWatch brokers.
+    
+    ``watchlist`` is a list of broker dict configurations.
+
+    If ``actiontype`` or resourcetype are non-None then they are used for filtering.
+    
+    :meth:`provision_brokers` returns a list of :class:`GeoWatchBroker` brokers.
+
+    **Examples**
+
+    .. code-block:: python
+
+        from geowatchutil.runtime import provision_brokers
+
+        brokers = provision_brokers(settings.GEOWATCH_BROKERS_CRON)
+
+        for broker in brokers:
+
+            broker.run(maxcycle=1)
+
+    """
+
+    from geowatchutil.broker.factory import build_broker
+
+
+    brokers = []
+    aws = {
+        'aws_region': settings.GEOWATCH_AWS_REGION,
+        'aws_access_key_id': settings.GEOWATCH_AWS_ACCESS_KEY_ID,
+        'aws_secret_access_key': settings.GEOWATCH_AWS_SECRET_ACCESS_KEY
+    }
+    for w in watchlist:
+        if w['enabled']:
+            if ((not actiontype) or (actiontype in w['action'])) and ((not resourcetype) or (resourcetype in w['resource'])):
+                producers = []
+                stores_out = []
+                if 'producers' in w:
+                    for c in w['producers']:
+                        if c['enabled']:
+                            c2 = copy.deepcopy(c)
+                            c2.update(aws)
+                            producers.extend(_build_geowatch_producers(c2))
+
+                if 'stores_out' in w:
+                    for c in w['stores_out']:
+                        if c['enabled']:
+                            c2 = copy.deepcopy(c)
+                            c2.update(aws)
+                            store = provision_store(
+                                c2['backend'],
+                                c2['key'],
+                                c2['codec'],
+                                ** c2['options'])
+                            stores_out.append(store)
+
+                b = build_broker(
+                    w['name'],
+                    w['description'],
+                    producers=producers,
+                    stores_out=stores_out,
+                    deduplicate=False,
+                    verbose=True)
+                brokers.append(b)
+
+    return brokers
+
+
+def _build_geowatch_producers(c):
+    """
+    Builds and returns list of producers based on config `c`.
+    """
+    producers = []
+    topics = c['topics'] if ('topics' in c) else ( [c['topic']] if ('topic' in c) else [])
+    client = None
+    for topic in topics:
+        client, p = provision_producer(
+            c['backend'],
+            topic=topic,
+            client=client,
+            codec=c['codec'],
+            templates=(getattr(templates, c['templates'], None) if ('templates' in c) else None),
+            url_webhook=c.get('url_webhook', None),
+            authtoken=c.get('authtoken', None),
+            topic_prefix=c.get('topic_prefix', None),
+            aws_region=c.get('aws_region', None),
+            aws_access_key_id=c.get('aws_access_key_id', None),
+            aws_secret_access_key=c.get('aws_secret_access_key', None))
+        producers.append(p)
+    return producers

@@ -14,7 +14,7 @@ def build_consumer(client, codec, topic, **kwargs):
     if codec_lc == "tile_request" or codec_lc == "geowatchcodectilerequest":
         consumer = GeoWatchConsumerTileRequest(
             client,
-            topic
+            topic,
             num_procs=num_procs,
             group=group,
             shard_id=shard_id,

@@ -1,67 +1,80 @@
-Getting Started!
+GeoWatch Util / Getting Started!
 ================
 
-First, install geowatch-util via pip.
+Welcome to the documentation for GeoWatch Util, the guts of GeoWatch_.  To install, follow the `installation`_ instructions.
+
+.. _geowatch: http://geowatch.io
+.. _installation: installation.html
+
+
+What is GeoWatch?
+-----------------
+
+GeoWatch is a spatially-enabled distributed message broker.  GeoWatch includes a suite of libraries that streamline information flow across a heterogeneous set streaming and batch data sources.
+
+The primary requirement of GeoWatch is to connect streaming GeoJSON_ services and traditional batch processing GIS system, and vice versa.
+
+.. _geojson: http://geojson.org/
+
+What does it do?
+----------------
+
+GeoWatch provies an abstraction layer on top of a heterogenous set of streaming and batch data sources.  With a commonm API, GeoWatch is able to pass messages between streaming systems, buffer streaming messages for batch processing, send notifications, and generally enable system-to-system spatially-enabled communication.
+
+What does it support?
+---------------------
+
+GeoWatch supports multple channels and stores, including the following:
+
+**Streaming Channels**
+
+1.  Apache Kafka - http://kafka.apache.org
+2.  AWS Kinesis - https://aws.amazon.com/kinesis/
+3.  AWS SNS - https://aws.amazon.com/sns/
+4.  AWS SQS - https://aws.amazon.com/sns/
+5.  Slack - https://slack.com
+
+**Batch Stores**
+
+1.  Memcached - http://memcached.org/
+2.  WFS - https://en.wikipedia.org/wiki/Web_Feature_Service
+3.  AWS S3 - https://aws.amazon.com/s3/
+4.  File
 
 If using Django, consider using geowatch-django, too.  GeoWatch Django provides a consistent way to provision geowatch objects based on Django settings.  Therefore, you don't need to create your own settings.
 
 Below is a list of simple patterns for provisioning consumers, producers, and stores by using the functions in `runtime.py`.  More complex provisioing routines can be executed by directly calling the respective factory.py functions `build_client`, `build_consumer`, `build_producer`, and `build_stores`.
 
+.. note::
 
-Consumers
----------
+    Multiple `examples`_ of GeoWatch in action are includec in the documentation.  These examples provide brokers for multiple examples.
+
+    .. _examples: examples.html
+
+.. note::
+
+    Read a more in-depth explanation of the `API`_.
+
+    .. _api: api.html
+ 
+Or skip directly to the source code documenation.  Most public API functions are contained in :mod:`geowatchutil.runtime`.
+
+Key Concepts
+------------
+
+GeoWatch is built on top of the following key concepts: consumers, producers, stores, brokers, and codecs.
+
+**Consumers**
 
 Consumers retrieve and decode messages from an external channel, such as AWS Kinesis.  GeoWatch can then send those messages into another streaming channel using producers or into persistent storage using stores.
 
-Currently supported channels include: Apache Kafka, AWS Kinesis, and AWS SQS.
+Currently supported channels include: `Apache Kafka`_, AWS Kinesis, and AWS SQS.
+
+.. _Apache Kafka: http://kafka.apache.org/
 
 Consumers user the runtime method provision_consumer.
 
-**Apache Kafka**
-
-.. code-block:: python
-
-    from geowatchutil.runtime import provision_consumer
-
-    client, consumer = provision_consumer(
-        "kafka",
-        host=None,
-        topic=None,
-        codec="plain",
-        topic_prefix="",
-        max_tries=12,
-        timeout=5,
-        sleep_period=5,
-        topic_check=False,
-        verbose=False):
-
-
-**AWS Kinesis**
-
-.. code-block:: python
-
-    from geowatchutil.runtime import provision_consumer_kafka
-
-    client, consumer = provision_consumer(
-        "kinesis",
-        topic=None,
-        codec="GeoWatchCodecPlain",
-        aws_region=None,
-        aws_access_key_id=None,
-        aws_secret_access_key=None,
-        shard_id='shardId-000000000000',
-        shard_it_type="LATEST",
-        client=None,
-        topic_prefix="",
-        max_tries=12,
-        timeout=5,
-        sleep_period=5,
-        topic_check=False,
-        verbose=False):
-
-
-Producers
----------
+**Producers**
 
 Producers generate messages.  GeoWatch has a variety of codec for messages, such as plain text, list/tab-separated-values, json/dict, GeoJSON, etc.  Producer's will add messages to a remote channel, which could be a real "streaming" service such as AWS kinesis or a "one-way" channel such as Slack notifications.
 
@@ -69,112 +82,25 @@ Currently supported channels include: Apache Kafka, AWS Kinesis, AWS SQS, AWS SN
 
 Producers user the runtime method provision_producer.
 
-.. code-block:: python
-
-    from geowatchutil.runtime import provision_producer
-
-    client, producer = provision_producer(
-        backend,
-        topic=None,
-        codec="GeoWatchCodecPlain",
-        path=None,
-        host=None,
-        aws_region=None,
-        aws_access_key_id=None,
-        aws_secret_access_key=None,
-        client=None,
-        topic_prefix="",
-        max_tries=12,
-        timeout=5,
-        sleep_period=5,
-        topic_check=False,
-        verbose=False)
-
-Stores
-------
+**Stores**
 
 Stores are used for persistant non-streaming storage of messages.  They can include file, document, or memory storage.  For example, dumping all message traffic to an AWS S3 object for long-term storage.  Or buffering the latest batch of messages in memcached for analysis across a multi-tenant infrastructure.
 
 Stores use the runtime method provision_store.
 
-**File Store**
-
-.. code-block:: python
-
-    from geowatchutil.store.factory import provision_store
-
-    store_file = provision_store(
-        "file",
-        settings.STATS_REQUEST_FILE,
-        "json",
-        which="first")
-
-**S3 Store**
-
-.. code-block:: python
-
-    from geowatchutil.store.factory import provision_store
-
-    store_s3 = provision_store(
-        "s3"
-        "final_stats.json",
-        "json",
-        aws_region=settings.AWS_REGION,
-        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-        aws_bucket="tilejet",
-        which="first")
-
-**Memcached Store**
-
-.. code-block:: python
-
-    from geowatchutil.store.factory import provision_store
-
-    store_memcached = provision_store(
-        "memcached",
-        "stats.json",
-        "json",
-        client_type="umemcache",
-        which="first",
-        host="localhost",
-        port=11211)
-
-
-**WFS Store**
-
-.. code-block:: python
-
-    from geowatchutil.store.factory import provision_store
-
-    store_wfs = provision_store(
-        "wfs",
-        key,
-        "wfs",
-        url="http://geonode.org/geoserver/geonode/wfs/"
-        auth_user="admin",
-        auth_password="admin")
-
-Brokers
--------
+**Brokers**
 
 Brokers provide an object-oriented way of managing the flow of messages.  You can attach message consumers, message producers, and message stores to brokers.
 
 Additionally, the GeoWatchBroker class can be extended to inject arbitray code directly into before/middle/after the message processing chain.  For example, extending GeoWatchBroker to set up a complex cron job that parses message data and adds to MongoDB.
 
-.. code-block:: python
+**Codecs**
 
-    from geowatchutil.broker.base import GeoWatchBroker
+Codecs convert messages between external and internal data representations.  GeoWatch includes codecs for: plain text, JSON, GeoJSON, and WFS.
 
-    broker = GeoWatchBroker(
-        stores_out=stores_out,
-        sleep_period=5,
-        count=1,
-        deduplicate=False,
-        filter_last_one=False,
-        timeout=5,
-        verbose=True)
+For example, for JSON, `encode` calls json.dumps(data) and `decode` calls json.loads(data).
 
-    broker.run(max_cycle=1)  # loop once
-    
-    broker.run()  # infinite loop
+.. note::
+    See GeoWatch in action on the examples_ page.
+
+        .. _examples: examples.html

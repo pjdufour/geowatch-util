@@ -1,5 +1,5 @@
 """
-Includes base node classes
+node.py includes the base GeoWatchNode class
 """
 from geowatchutil.codec.factory import build_codec
 
@@ -7,10 +7,19 @@ from geowatchutil.codec.factory import build_codec
 class GeoWatchNode(object):
     """
     GeoWatchNode is the base class for producers and consumers
+
     """
+
     # Public
     topic = None
+    """
+        A string field that represents the topic.  In GeoWatch, ``topic`` represents an Apache Kafka topic, AWS Kinesis stream, AWS SNS topic, or any consumer/producer backend's topic.
+    """
+
     mode = None
+    """
+        A string field that represents the mode.  Either: ``duplex``, ``consumer``, or ``producer``.
+    """
 
     # Private
     _client = None
@@ -18,6 +27,8 @@ class GeoWatchNode(object):
     _channel = None
 
     def __init__(self, client, mode, codec, topic):
+        """
+        """
         self._client = client
         self.mode = mode
         self.topic = topic

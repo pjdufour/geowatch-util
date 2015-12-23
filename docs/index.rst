@@ -6,14 +6,15 @@
 Welcome to GeoWatch Util's documentation!
 =========================================
 
-Contents:
+**Contents:**
 
 .. toctree::
    :maxdepth: 4
 
    Installation </installation>
-   Getting Started </getting-started>
-   Source Code </source-code>
+   Getting Started! </getting-started>
+   API </api>
+   Examples </examples>
 
 Indices and tables
 ==================

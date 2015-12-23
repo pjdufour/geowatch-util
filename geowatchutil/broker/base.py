@@ -4,6 +4,8 @@ import time
 class GeoWatchBroker(object):
 
     verbose = False
+    name = None
+    description = None
 
     threads = None
     sleep_period = None
@@ -118,7 +120,9 @@ class GeoWatchBroker(object):
         for store in self.stores_out:
             store.close()
 
-    def __init__(self, consumers=None, producers=None, stores_in=None, stores_out=None, count=1, timeout=5, threads=1, sleep_period=5, deduplicate=False, filter_last_one=False, verbose=False):
+    def __init__(self, name, description, consumers=None, producers=None, stores_in=None, stores_out=None, count=1, timeout=5, threads=1, sleep_period=5, deduplicate=False, filter_last_one=False, verbose=False):
+        self.name = name
+        self.description = description
         self.consumers = consumers
         self.producers = producers
         self.stores_in = stores_in

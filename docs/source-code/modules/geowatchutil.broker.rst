@@ -7,6 +7,7 @@ Submodules
 .. toctree::
 
    geowatchutil.broker.base
+   geowatchutil.broker.factory
 
 Module contents
 ---------------
