@@ -92,4 +92,3 @@ class GeoWatchStoreWebHook(GeoWatchStore):
             self.auth_b64 = b64encode(self.auth_user+":"+self.auth_password)
         else:
             self.auth_b64 = None
-

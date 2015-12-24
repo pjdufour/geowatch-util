@@ -1,4 +1,4 @@
-from geowatchutil.channel.base import GeoWatchChannelTopic
+from geowatchutil.channel.base import GeoWatchChannelError, GeoWatchChannelTopic
 
 
 class GeoWatchChannelSNS(GeoWatchChannelTopic):

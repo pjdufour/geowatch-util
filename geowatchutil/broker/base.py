@@ -113,7 +113,6 @@ class GeoWatchBroker(object):
                 for store in self.stores_out:
                     store.write_messages(messages, flush=True)
 
-
     def close(self):
         for producer in self.producers:
             producer.close()

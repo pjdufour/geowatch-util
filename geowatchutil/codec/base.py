@@ -86,7 +86,6 @@ class GeoWatchCodec(object):
         else:
             return message
 
-
     def find_template(self, message):
         t = None
         for candidate in self.templates:
@@ -97,7 +96,6 @@ class GeoWatchCodec(object):
                 t = candidate["template"]
                 break
         return t
-
 
     def __init__(self, channel=None, content_type="text/plain", templates=None):
         self._channel = channel

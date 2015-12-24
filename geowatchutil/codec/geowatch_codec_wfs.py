@@ -1,6 +1,3 @@
-import copy
-import json
-
 from geowatchutil.codec.geowatch_codec_geojson import GeoWatchCodecGeoJSON
 from geowatchutil.base import GeoWatchError
 
@@ -9,7 +6,7 @@ class GeoWatchCodecWFS(GeoWatchCodecGeoJSON):
 
     def _build_transaction(self, default_featuretype, messages):
         t = '<?xml version="1.0" encoding="UTF-8"?>\n'
-        t = t + '<wfs:Transaction xmlns:geonode="http://www.geonode.org/" xmlns:wfs="http://www.opengis.net/wfs" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" service= "WFS" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">\n'
+        t = t + '<wfs:Transaction xmlns:geonode="http://www.geonode.org/" xmlns:wfs="http://www.opengis.net/wfs" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" service= "WFS" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">\n'  # noqa
         for message in messages:
             ft = None
             data = None
@@ -23,15 +20,15 @@ class GeoWatchCodecWFS(GeoWatchCodecGeoJSON):
                 t = t + '    <wfs:Insert>\n'
                 if 'features' in data:
                     for f in data['features']:
-                        t = t + '    <'+ ft +">\n"
+                        t = t + '    <'+ft+">\n"
                         for k in f['properties']:
                             if f['properties'][k]:
                                 t = t + '      <'+k+'>'+str(f['properties'][k])+'</'+k+'>\n'
                         t = t + '      <'+f['geometry_name']+'>\n'
                         if f['geometry']['type'] == "Point":
-                            t = t + '      <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#4326"><gml:coordinates decimal="." cs="," ts=" ">'+(str(f['geometry']['coordinates'][0])+","+str(f['geometry']['coordinates'][1]))+'</gml:coordinates></gml:Point>\n'
+                            t = t + '      <gml:Point srsName="http://www.opengis.net/gml/srs/epsg.xml#4326"><gml:coordinates decimal="." cs="," ts=" ">'+(str(f['geometry']['coordinates'][0])+","+str(f['geometry']['coordinates'][1]))+'</gml:coordinates></gml:Point>\n'  # noqa
                         t = t + '    </'+f['geometry_name']+'>\n'
-                        t = t + '    </'+ ft +">\n"
+                        t = t + '    </'+ft+">\n"
                 t = t + '  </wfs:Insert>\n'
         t = t + '</wfs:Transaction>'
         return t

@@ -50,7 +50,6 @@ class GeoWatchClientKafka(GeoWatchClientTopic):
     def list_topics(self, limit=100, verbose=True):
         return self._client.topic_partitions.keys()
 
-
     def close(self):
         return self._client.close()
 

@@ -10,4 +10,3 @@ def build_producer(client, codec, topic):
     else:
         producer = GeoWatchProducer(client, codec, topic)
     return producer
-

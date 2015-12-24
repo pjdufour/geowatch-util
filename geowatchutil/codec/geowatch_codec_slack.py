@@ -1,11 +1,15 @@
 import copy
-import json
 
 from geowatchutil.codec.geowatch_codec_json import GeoWatchCodecJSON
 from geowatchutil.base import GeoWatchError
 
 
 class GeoWatchCodecSlack(GeoWatchCodecJSON):
+    """
+    Codec for Slack_ messages.
+
+    .. slack_: https://slack.com
+    """
 
     templates = None
 
@@ -24,9 +28,9 @@ class GeoWatchCodecSlack(GeoWatchCodecJSON):
         """
         Encode message for sending via channel
         """
-        #return self.encode_channel(json.dumps(message))
+
         t = self._find_template(message)
-        m2 = None 
+        m2 = None
 
         if "attachments" in t:
             m2 = copy.deepcopy(t)
@@ -36,7 +40,7 @@ class GeoWatchCodecSlack(GeoWatchCodecJSON):
         else:
             m2 = self._render_message_plain(t, message)
 
-        return super(GeoWatchCodecSlack, self).encode(m2)
+        return super(GeoWatchCodecSlack, self).encode(m2)  # self.encode_channel(json.dumps(message))
 
     def _encode_attachment(self, a, message):
         """
@@ -80,6 +84,10 @@ class GeoWatchCodecSlack(GeoWatchCodecJSON):
     def decode(self, message):
         """
         Decode message received via channel
+
+        .. warning::
+
+            :mod:GeoWatchCodecSlack cannot decode messages.
         """
         raise GeoWatchError("Cannot decode slack messages.")
 

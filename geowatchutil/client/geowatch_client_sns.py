@@ -71,7 +71,7 @@ class GeoWatchClientSNS(GeoWatchClientTopic):
 
     def list_topics(self, limit=100, verbose=True):
         topics = self._client.list_topics(Limit=limit)
-        topic_names = streams[u'Topics']
+        topic_names = topics[u'Topics']
         return topic_names
 
     def __init__(self, topic_prefix="", aws_region=None, aws_access_key_id=None, aws_secret_access_key=None, templates=None):

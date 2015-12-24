@@ -29,4 +29,3 @@ def build_consumer(client, codec, topic, **kwargs):
             shard_id=shard_id,
             shard_it_type=shard_it_type)
     return consumer
-

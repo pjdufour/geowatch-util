@@ -57,13 +57,13 @@ def build_client(backend, **kwargs):
             kwargs.get('topic_prefix'))
     elif backend == "wfs":
         client = build_client_wfs(kwargs.get('url', None), kwargs.get('auth_user', None), kwargs.get('auth_password', None))
-    elif backend == "sns" and aws_region and aws_access_key_id and aws_secret_access_key:
+    elif backend == "sns":
         client = build_client_sns(
             kwargs.get('aws_region', None),
             kwargs.get('aws_access_key_id', None),
             kwargs.get('aws_secret_access_key', None),
             kwargs.get('topic_prefix', None),
             kwargs.get('templates', None))
-    elif backend == "slack" and (url_webhook or authtoken):
+    elif backend == "slack":
         client = build_client_slack(kwargs.get('url_webhook', None), kwargs.get('authtoken', None), kwargs.get('templates', None))
     return client

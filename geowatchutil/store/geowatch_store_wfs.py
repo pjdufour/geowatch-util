@@ -1,7 +1,6 @@
-import boto3
-
 from geowatchutil.store.base import GeoWatchStoreWebHook
 from geowatchutil.base import GeoWatchError
+
 
 class GeoWatchStoreWFS(GeoWatchStoreWebHook):
 

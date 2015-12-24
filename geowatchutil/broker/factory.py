@@ -1,6 +1,9 @@
 from geowatchutil.broker.base import GeoWatchBroker
 
+
 def build_broker(name, description, **kwargs):
+
+    verbose = kwargs.get('verbose', False)
 
     consumers = kwargs.get('consumers', None)
     producers = kwargs.get('producers', None)
@@ -29,5 +32,4 @@ def build_broker(name, description, **kwargs):
         filter_last_one=filter_last_one,
         verbose=verbose)
 
-     return broker
-
+    return broker

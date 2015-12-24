@@ -1,15 +1,16 @@
 """
 Provides runtime functions.  These functions wrap factory functions with exception handling and timeouts.
 """
+import copy
 import time
 
 
 def provision_consumer(backend, **kwargs):
     """
     Provision a new GeoWatch consumer.
-    
+
     ``backend`` is either: 'kafka', 'kinesis', 'sns', or 'sqs'.
-    
+
     If ``client=None`` in ``kwargs``, :meth:`provision_consumer` will create a client.
 
     :meth:`provision_consumer` returns a tuple ``(client, consumer)``.
@@ -42,8 +43,7 @@ def provision_consumer(backend, **kwargs):
 
     tries = 0
     while tries < max_tries:
-        #try:
-        if 1 == 1:
+        try:
             if not client:
                 from geowatchutil.client.factory import build_client
                 client = build_client(backend, **kwargs)
@@ -53,16 +53,14 @@ def provision_consumer(backend, **kwargs):
                     if not client.check_topic_exists(topic):
                         client.create_topic(topic)
 
-
-                from geowatchutil.producer.factory import build_producer
+                from geowatchutil.consumer.factory import build_consumer
                 consumer = build_consumer(client, codec, topic, **kwargs)
 
-
-        #except:
-        #        if verbose:
-        #            print "Could not get lock on GeoWatch server. Try "+str(tries)+"."
-        #        client = None
-        #        consumer = None
+        except:
+            if verbose:
+                print "Error in provision_consumer.  Could not get lock on GeoWatch server. Try "+str(tries)+"."
+            client = None
+            consumer = None
 
         if consumer:
             break
@@ -77,7 +75,7 @@ def provision_producer(backend, **kwargs):
     Provision a new GeoWatch Producer.
 
     ``backend`` is either: 'kafka', 'kinesis', 'sns', or 'sqs'.
-    
+
     If ``client=None`` in ``kwargs``, :meth:`provision_producer` will create a client.
 
     :meth:`provision_producer` returns a tuple ``(client, producer)``.
@@ -111,8 +109,7 @@ def provision_producer(backend, **kwargs):
 
     tries = 0
     while tries < max_tries:
-        # try:
-        if 1 == 1:
+        try:
             if not client:
                 from geowatchutil.client.factory import build_client
                 client = build_client(backend, **kwargs)
@@ -125,11 +122,11 @@ def provision_producer(backend, **kwargs):
                 from geowatchutil.producer.factory import build_producer
                 producer = build_producer(client, codec, topic)
 
-        #except:
-        #    if verbose:
-        #        print "Could not get lock on GeoWatch server. Try "+str(tries)+"."
-        #    client = None
-        #    producer = None
+        except:
+            if verbose:
+                print "Error in provision_producer.  Could not get lock on GeoWatch server. Try "+str(tries)+"."
+            client = None
+            producer = None
 
         if producer:
             break
@@ -142,11 +139,11 @@ def provision_producer(backend, **kwargs):
 def provision_store(backend, key, codec, **kwargs):
     """
     Provision a new GeoWatch store.
-    
+
     ``backend`` is either: 'file', 'memcached', 's3', or 'wfs'.
 
     ``codec`` is either: 'plain', 'json', 'tilerequest', or 'wfs'.
-    
+
     :meth:`provision_store` returns a ``store``.
 
     **Examples**
@@ -174,16 +171,14 @@ def provision_store(backend, key, codec, **kwargs):
 
     tries = 0
     while tries < max_tries:
-        # try:
-        if 1 == 1:
+        try:
             from geowatchutil.store.factory import build_store
             store = build_store(backend, key, codec, **kwargs)
 
-        #except:
-        #    if verbose:
-        #        print "Could not get lock on GeoWatch server. Try "+str(tries)+"."
-        #    client = None
-        #    producer = None
+        except:
+            if verbose:
+                print "Error in provision_store.  Could not get lock on GeoWatch server. Try "+str(tries)+"."
+            store = None
 
         if store:
             break
@@ -193,14 +188,17 @@ def provision_store(backend, key, codec, **kwargs):
     return store
 
 
-def provision_brokers(watchlist, actiontype=None, resourcetype=None):
+def provision_brokers(watchlist, config=None, templates=None, actiontype=None, resourcetype=None):
     """
     Provision new GeoWatch brokers.
-    
+
     ``watchlist`` is a list of broker dict configurations.
 
+    ``config`` is a dict configuration for shared variables, such as AWS Region, AWS Credentials, etc.
+    Fallback for missing broker-specific values.
+
     If ``actiontype`` or resourcetype are non-None then they are used for filtering.
-    
+
     :meth:`provision_brokers` returns a list of :class:`GeoWatchBroker` brokers.
 
     **Examples**
@@ -209,7 +207,8 @@ def provision_brokers(watchlist, actiontype=None, resourcetype=None):
 
         from geowatchutil.runtime import provision_brokers
 
-        brokers = provision_brokers(settings.GEOWATCH_BROKERS_CRON)
+        config = {'aws_access_key_id':'', 'aws_secret_access_key':'', 'aws_region':''}
+        brokers = provision_brokers(settings.GEOWATCH_BROKERS_CRON, config=config)
 
         for broker in brokers:
 
@@ -219,13 +218,7 @@ def provision_brokers(watchlist, actiontype=None, resourcetype=None):
 
     from geowatchutil.broker.factory import build_broker
 
-
     brokers = []
-    aws = {
-        'aws_region': settings.GEOWATCH_AWS_REGION,
-        'aws_access_key_id': settings.GEOWATCH_AWS_ACCESS_KEY_ID,
-        'aws_secret_access_key': settings.GEOWATCH_AWS_SECRET_ACCESS_KEY
-    }
     for w in watchlist:
         if w['enabled']:
             if ((not actiontype) or (actiontype in w['action'])) and ((not resourcetype) or (resourcetype in w['resource'])):
@@ -235,14 +228,15 @@ def provision_brokers(watchlist, actiontype=None, resourcetype=None):
                     for c in w['producers']:
                         if c['enabled']:
                             c2 = copy.deepcopy(c)
-                            c2.update(aws)
-                            producers.extend(_build_geowatch_producers(c2))
+                            if config:
+                                c2.update(config)
+                            producers.extend(_build_geowatch_producers(c2, templates=templates))
 
                 if 'stores_out' in w:
                     for c in w['stores_out']:
                         if c['enabled']:
                             c2 = copy.deepcopy(c)
-                            c2.update(aws)
+                            c2.update(config)
                             store = provision_store(
                                 c2['backend'],
                                 c2['key'],
@@ -262,12 +256,12 @@ def provision_brokers(watchlist, actiontype=None, resourcetype=None):
     return brokers
 
 
-def _build_geowatch_producers(c):
+def _build_geowatch_producers(c, templates=None):
     """
     Builds and returns list of producers based on config `c`.
     """
     producers = []
-    topics = c['topics'] if ('topics' in c) else ( [c['topic']] if ('topic' in c) else [])
+    topics = c['topics'] if ('topics' in c) else ([c['topic']] if ('topic' in c) else [])
     client = None
     for topic in topics:
         client, p = provision_producer(

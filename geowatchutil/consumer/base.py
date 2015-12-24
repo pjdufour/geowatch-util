@@ -62,4 +62,3 @@ class GeoWatchConsumer(GeoWatchNode):
 
     def __exit__(self, *args, **kwargs):
         self.close()
-
