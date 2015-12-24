@@ -69,7 +69,7 @@ class GeoWatchClientTopic(GeoWatchClientStreaming):
     # Public
     topic_prefix = ""
 
-    def wait_topic(self, topic):
+    def wait_topic(self, topic, verbose=False):
         pass
 
     def __init__(self, backend="", topic_prefix="", templates=None):

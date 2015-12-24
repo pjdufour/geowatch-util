@@ -62,6 +62,8 @@ class GeoWatchBroker(object):
             time.sleep(self.sleep_period)
 
     def _cycle_in(self):
+        if self.verbose:
+            print "GeoWatchBroker._cycle_in()"
         messages_all = []
         messages_out = []
 
@@ -112,6 +114,17 @@ class GeoWatchBroker(object):
             if self.stores_out:
                 for store in self.stores_out:
                     store.write_messages(messages, flush=True)
+
+    def delete_topics(self):
+        """
+        Deletes all topics attached to consumers and producers.  Useful for cleaning up after testing.
+        """
+        if self.consumers:
+            for consumer in self.consumers:
+                consumer.delete_topic()
+        if self.producers:
+            for producer in self.producers:
+                producer.delete_topic()
 
     def close(self):
         for producer in self.producers:

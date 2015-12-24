@@ -25,7 +25,7 @@ class GeoWatchCodecGeoJSON(GeoWatchCodec):
         Decode message received via channel
         """
         message_decoded = self.decode_channel(message)
-        message_json = json.loads(message_decodec)
+        message_json = json.loads(message_decoded)
         if "metadata" in message_json:
             message_json["data"] = geojson.loads(json.dumps(message_json["data"]))
             return message_json

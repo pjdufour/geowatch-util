@@ -3,10 +3,11 @@ import string
 
 from geojson import Feature, FeatureCollection, Point
 
-def build_random_properties():
+
+def build_random_properties(count=2):
     letters = string.ascii_lowercase
     p = {}
-    for i in range(4):
+    for i in range(count):
         # j = random.randint(0, 25)
         j = letters[i]
         k = random.randint(0, 25)
@@ -14,14 +15,14 @@ def build_random_properties():
     return p
 
 
-def build_random_point():
-    x = random.uniform(-180.0, 180.0)
-    y = random.uniform(-90.0, 90.0)
+def build_random_point(minx=-180.0, miny=-90.0, maxx=180.0, maxy=90.0):
+    x = random.uniform(minx, maxx)
+    y = random.uniform(miny, maxy)
     return Point((x,y))
 
 
 def build_random_feature():
-    p = build_random_properties()
+    p = build_random_properties(count=2)
     g = build_random_point()
     f = Feature(geometry=g, properties=p)
     return f

@@ -36,14 +36,15 @@ def provision_consumer(backend, **kwargs):
     verbose = kwargs.get('verbose', False)
     max_tries = kwargs.get('max_tries', 12)
     sleep_period = kwargs.get('sleep_period', 5)
-    client = kwargs.get('client', None)
-    codec = kwargs.get('codec', None)
-    topic = kwargs.get('topic', None)
-    topic_check = kwargs.get('topic_check', False)
+    client = kwargs.pop('client', None)
+    codec = kwargs.pop('codec', None)
+    topic = kwargs.pop('topic', None)
+    topic_check = kwargs.get('topic_check', True)  # Defaults to True
 
     tries = 0
     while tries < max_tries:
-        try:
+        #try:
+        if 1 == 1:
             if not client:
                 from geowatchutil.client.factory import build_client
                 client = build_client(backend, **kwargs)
@@ -52,16 +53,25 @@ def provision_consumer(backend, **kwargs):
                 if topic and topic_check:
                     if not client.check_topic_exists(topic, verbose=verbose):
                         client.create_topic(topic)
-                        #client.wait_topic(topic)
+                        try:
+                            client.wait_topic(topic, verbose=verbose)
+                        except:
+                            print "Waited for topic.  Topic was never created."
 
-                from geowatchutil.consumer.factory import build_consumer
-                consumer = build_consumer(client, codec, topic, **kwargs)
+                    if client.check_topic_exists(topic, verbose=verbose):
+                        from geowatchutil.consumer.factory import build_consumer
+                        consumer = build_consumer(client, codec, topic, **kwargs)
 
-        except:
-            if verbose:
-                print "Error in provision_consumer.  Could not get lock on GeoWatch server. Try "+str(tries)+"."
-            client = None
-            consumer = None
+                else:
+                    from geowatchutil.consumer.factory import build_consumer
+                    consumer = build_consumer(client, codec, topic, **kwargs)
+
+
+        #except:
+        #    if verbose:
+        #        print "Error in provision_consumer.  Could not get lock on GeoWatch server. Try "+str(tries)+"."
+        #    client = None
+        #    consumer = None
 
         if consumer:
             break
@@ -106,7 +116,7 @@ def provision_producer(backend, **kwargs):
     client = kwargs.get('client', None)
     codec = kwargs.get('codec', None)
     topic = kwargs.get('topic', None)
-    topic_check = kwargs.get('topic_check', False)
+    topic_check = kwargs.get('topic_check', True)  # Defaults to True
 
     tries = 0
     while tries < max_tries:
@@ -120,10 +130,18 @@ def provision_producer(backend, **kwargs):
                 if topic and topic_check:
                     if not client.check_topic_exists(topic, verbose=verbose):
                         client.create_topic(topic)
-                        #client.wait_topic(topic)
+                        try:
+                            client.wait_topic(topic, verbose=verbose)
+                        except:
+                            print "Waited for topic.  Topic was never created."
+                    
+                    if client.check_topic_exists(topic, verbose=verbose):
+                        from geowatchutil.producer.factory import build_producer
+                        producer = build_producer(client, codec, topic)
 
-                from geowatchutil.producer.factory import build_producer
-                producer = build_producer(client, codec, topic)
+                else:
+                    from geowatchutil.producer.factory import build_producer
+                    producer = build_producer(client, codec, topic)
 
         #except:
         #    if verbose:
@@ -256,8 +274,18 @@ def provision_broker(brokerconfig, globalconfig, templates=None, verbose=True):
     from geowatchutil.broker.factory import build_broker
 
 
+    consumers = []
     producers = []
     stores_out = []
+
+    if 'consumers' in brokerconfig:
+        for c in brokerconfig['consumers']:
+            if c['enabled']:
+                c2 = copy.deepcopy(c)
+                if globalconfig:
+                    c2.update(globalconfig)
+                consumers.extend(_build_geowatch_consumers(c2, verbose=verbose))
+
     if 'producers' in brokerconfig:
         for c in brokerconfig['producers']:
             if c['enabled']:
@@ -282,12 +310,37 @@ def provision_broker(brokerconfig, globalconfig, templates=None, verbose=True):
     broker = build_broker(
         brokerconfig['name'],
         brokerconfig['description'],
+        count=brokerconfig.get('count', 1),
+        consumers=consumers,
         producers=producers,
         stores_out=stores_out,
         deduplicate=False,
-        verbose=True)
+        verbose=verbose)
 
     return broker
+
+
+def _build_geowatch_consumers(c, verbose=False):
+    """
+    Builds and returns list of consumers based on config `c`.
+    """
+    consumers = []
+    topics = c['topics'] if ('topics' in c) else ([c['topic']] if ('topic' in c) else [])
+    client = None
+    for topic in topics:
+        client, consumer = provision_consumer(
+            c['backend'],
+            topic=topic,
+            topic_check=c.get('topic_check', None),
+            client=client,
+            codec=c['codec'],
+            topic_prefix=c.get('topic_prefix', None),
+            aws_region=c.get('aws_region', None),
+            aws_access_key_id=c.get('aws_access_key_id', None),
+            aws_secret_access_key=c.get('aws_secret_access_key', None),
+            verbose=verbose)
+        consumers.append(consumer)
+    return consumers
 
 
 def _build_geowatch_producers(c, templates=None, verbose=False):
@@ -298,7 +351,7 @@ def _build_geowatch_producers(c, templates=None, verbose=False):
     topics = c['topics'] if ('topics' in c) else ([c['topic']] if ('topic' in c) else [])
     client = None
     for topic in topics:
-        client, p = provision_producer(
+        client, producer = provision_producer(
             c['backend'],
             topic=topic,
             topic_check=c.get('topic_check', None),
@@ -312,5 +365,5 @@ def _build_geowatch_producers(c, templates=None, verbose=False):
             aws_access_key_id=c.get('aws_access_key_id', None),
             aws_secret_access_key=c.get('aws_secret_access_key', None),
             verbose=verbose)
-        producers.append(p)
+        producers.append(producer)
     return producers

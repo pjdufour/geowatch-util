@@ -74,7 +74,9 @@ class GeoWatchClientKinesis(GeoWatchClientTopic):
         stream_names = streams[u'StreamNames']
         return stream_names
 
-    def wait_topic(self, topic):
+    def wait_topic(self, topic, verbose=False):
+        if verbose:
+            print "Waiting for topic ", topic
         waiter = self._client.get_waiter('stream_exists')
         waiter.wait(StreamName=(self.topic_prefix + topic))
 

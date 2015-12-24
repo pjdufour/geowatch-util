@@ -4,7 +4,7 @@ import string
 from geowatchutil.gw_random import build_random_featurecollection
 
 
-def simulate_messages_geojson(featuretype=None, count=5, now=None, verbose=None):
+def simulate_messages_geojson(featuretype=None, count=2, now=None, verbose=None):
     if not now:
         now = datetime.datetime.now()
 
@@ -12,11 +12,11 @@ def simulate_messages_geojson(featuretype=None, count=5, now=None, verbose=None)
     for i in range(count):
         data = build_random_featurecollection(verbose=verbose)
         message = {
-            'metadata': {
-                'featuretype': featuretype,
-                'date': now.isoformat()
+            u'metadata': {
+                u'featuretype': unicode(featuretype),
+                u'date': unicode(now.isoformat())
             },
-            'data': data
+            u'data': data
         }
         messages.append(message)
     return messages
