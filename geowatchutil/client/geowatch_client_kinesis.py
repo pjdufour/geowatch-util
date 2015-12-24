@@ -74,6 +74,10 @@ class GeoWatchClientKinesis(GeoWatchClientTopic):
         stream_names = streams[u'StreamNames']
         return stream_names
 
+    def wait_topic(self, topic):
+        waiter = self._client.get_waiter('stream_exists')
+        waiter.wait(StreamName=(self.topic_prefix + topic))
+
     def __init__(self, topic_prefix="", aws_region=None, aws_access_key_id=None, aws_secret_access_key=None):
         super(GeoWatchClientKinesis, self).__init__(backend="kinesis", topic_prefix=topic_prefix)
 

@@ -22,8 +22,10 @@ Submodules
 .. toctree::
 
    geowatchutil.base
+   geowatchutil.gw_random
    geowatchutil.node
    geowatchutil.runtime
+   geowatchutil.simulate
 
 Module contents
 ---------------
