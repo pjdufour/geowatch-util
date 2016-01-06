@@ -1,5 +1,7 @@
 import json
 
+from slackclient import SlackClient
+
 from geowatchutil.client.base import GeoWatchClientWebHook
 
 
@@ -108,3 +110,6 @@ class GeoWatchClientSlack(GeoWatchClientWebHook):
             url_webhook=url_webhook,
             authtoken=authtoken,
             templates=templates)
+
+        if authtoken:
+            self._client = SlackClient(authtoken)

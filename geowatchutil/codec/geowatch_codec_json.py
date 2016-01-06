@@ -41,5 +41,5 @@ class GeoWatchCodecJSON(GeoWatchCodec):
         messages = package['mesages']
         return [json.loads(m) for m in messages]
 
-    def __init__(self, channel=None):
-        super(GeoWatchCodecJSON, self).__init__(channel=channel, content_type="application/json")
+    def __init__(self, channel=None, content_type="application/json"):
+        super(GeoWatchCodecJSON, self).__init__(channel=channel, content_type=content_type)

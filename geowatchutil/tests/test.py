@@ -1,10 +1,10 @@
 import unittest
 from geowatchutil.buffer.base import GeoWatchBuffer
 from geowatchutil.broker.factory import build_broker
-from geowatchutil.store.geowatch_store_file import GeoWatchStoreFile
 from geowatchutil.channel.base import GeoWatchChannelError
 from geowatchutil.channel.geowatch_channel_slack import GeoWatchChannelSlack
 from geowatchutil.client.geowatch_client_slack import GeoWatchClientSlack
+from geowatchutil.store.factory import build_store
 
 
 class TestBuffer(unittest.TestCase):
@@ -38,7 +38,7 @@ class TestBroker(unittest.TestCase):
             outfile,
             "json",
             which="all",
-            which_index="0"):
+            which_index="0")
         stores_out = [store_out]
         broker = build_broker(
             "Test Name",
@@ -59,7 +59,7 @@ class TestBroker(unittest.TestCase):
             outfile,
             "json",
             which="first",
-            which_index="0"):
+            which_index="0")
         stores_out = [store_out]
         broker = build_broker(
             "Test Name",

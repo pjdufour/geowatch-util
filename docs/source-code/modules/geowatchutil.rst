@@ -12,6 +12,7 @@ Subpackages
     geowatchutil.client
     geowatchutil.codec
     geowatchutil.consumer
+    geowatchutil.mapping
     geowatchutil.producer
     geowatchutil.store
     geowatchutil.tests
@@ -23,6 +24,7 @@ Submodules
 
    geowatchutil.base
    geowatchutil.gw_random
+   geowatchutil.integrity
    geowatchutil.node
    geowatchutil.runtime
    geowatchutil.simulate

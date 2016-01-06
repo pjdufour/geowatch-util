@@ -1,4 +1,4 @@
-from geowatchutil.base import parse_date
+from geowatchutil.base import parse_date, GeoWatchError
 
 
 def decode_tile_request(a):
@@ -35,6 +35,18 @@ class GeoWatchCodec(object):
 
     # Private
     _channel = None
+
+    def encode(self, message, **kwargs):
+        """
+        Encode message for sending via channel
+        """
+        raise GeoWatchError("GeoWatchCodec cannot encode.  You must overwrite this function.")
+
+    def decode(self, message):
+        """
+        Decode message received via channel
+        """
+        raise GeoWatchError("GeoWatchCodec cannot decode.  You must overwrite this function.")
 
     def decode_channel(self, message):
         if self._channel == "file":
@@ -89,10 +101,9 @@ class GeoWatchCodec(object):
     def find_template(self, message):
         t = None
         for candidate in self.templates:
-            print "GeoWatchCodec.find_templates candidate: ", candidate
-            action = message["template"]["actiontype"]
-            resource = message["template"]["resourcetype"]
-            if action in candidate["actions"] and resource in candidate["resources"]:
+            actiontype = message["metadata"]["actiontype"]
+            targettype = message["metadata"]["targettype"]
+            if actiontype in candidate["actiontype"] and targettype in candidate["targettype"]:
                 t = candidate["template"]
                 break
         return t

@@ -16,6 +16,7 @@ def build_broker(name, description, **kwargs):
     sleep_period = kwargs.get('sleep_period', 5)
     deduplicate = kwargs.get('deduplicate', False)
     filter_last_one = kwargs.get('filter_last_one', False)
+    filter_metadata = kwargs.get('filter_metadata', None)
 
     broker = GeoWatchBroker(
         name,
@@ -30,6 +31,7 @@ def build_broker(name, description, **kwargs):
         sleep_period=sleep_period,
         deduplicate=deduplicate,
         filter_last_one=filter_last_one,
+        filter_metadata=filter_metadata,
         verbose=verbose)
 
     return broker

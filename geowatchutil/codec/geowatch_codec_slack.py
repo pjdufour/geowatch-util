@@ -8,46 +8,37 @@ class GeoWatchCodecSlack(GeoWatchCodecJSON):
     """
     Codec for Slack_ messages.
 
-    .. slack_: https://slack.com
+    .. _Slack: https://slack.com
     """
 
-    templates = None
-
-    def _find_template(self, message):
-        t = None
-        for candidate in self.templates:
-            print "candidate: ", candidate
-            action = message["template"]["actiontype"]
-            resource = message["template"]["resourcetype"]
-            if action in candidate["actions"] and resource in candidate["resources"]:
-                t = candidate["template"]
-                break
-        return t
-
-    def encode(self, message, **kwargs):
+    def render(self, message):
         """
-        Encode message for sending via channel
+        Render message for sending via channel
         """
 
-        t = self._find_template(message)
+        t = self.find_template(message)
+        if not t:
+            raise GeoWatchError("GeoWatchCodecPlain.render: Could not find template.")
+
+        data = message['data'] if 'metadata' in message else message
         m2 = None
 
         if "attachments" in t:
             m2 = copy.deepcopy(t)
             for i in range(len(m2["attachments"])):
-                a = self._encode_attachment(m2["attachments"][i], message)
+                a = self._render_message_attachment(m2["attachments"][i], data)
                 m2["attachments"][i] = a
         else:
-            m2 = self._render_message_plain(t, message)
+            m2 = self._render_message_plain(t, data)
 
         return super(GeoWatchCodecSlack, self).encode(m2)  # self.encode_channel(json.dumps(message))
 
-    def _encode_attachment(self, a, message):
+    def _render_message_attachment(self, a, message):
         """
         See: https://api.slack.com/docs/attachments
         """
 
-        for k in ["title", "title_link", "fallback", "text", "thumb_url"]:
+        for k in ["title", "title_link", "fallback", "text", "thumb_url", "color"]:
             if k in a:
                 a[k] = a[k].format(** message)
 
@@ -62,7 +53,7 @@ class GeoWatchCodecSlack(GeoWatchCodecJSON):
 
         return copy.deepcopy(a)
 
-    def _encode_plain(template, message):
+    def _render_message_plain(template, message):
         """
         See: https://api.slack.com/incoming-webhooks
         """
@@ -80,6 +71,16 @@ class GeoWatchCodecSlack(GeoWatchCodecJSON):
             message_encoded = None
 
         return message_encoded
+
+    def encode(self, message):
+        """
+        Encode message to send via channel
+
+        .. warning::
+
+            :mod:GeoWatchCodecSlack cannot encode messages.
+        """
+        raise GeoWatchError("Cannot encode slack messages.  Use render instead, which should happen automatically when given templates.")
 
     def decode(self, message):
         """

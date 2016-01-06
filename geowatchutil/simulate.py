@@ -1,5 +1,4 @@
 import datetime
-import string
 
 from geowatchutil.gw_random import build_random_featurecollection
 

@@ -5,3 +5,4 @@ iso8601
 kafka-python
 python-dateutil
 pymongo
+slackclient

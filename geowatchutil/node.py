@@ -26,10 +26,8 @@ class GeoWatchNode(object):
     _codec = None
     _channel = None
 
-
     def delete_topic(self, timeout=5, verbose=False):
         return self._client.delete_topic(self.topic, timeout=timeout, verbose=verbose)
-
 
     def __init__(self, client, mode, codec, topic):
         """

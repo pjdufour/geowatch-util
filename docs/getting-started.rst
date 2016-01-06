@@ -1,7 +1,7 @@
 GeoWatch Util / Getting Started!
 ================
 
-Welcome to the documentation for GeoWatch Util, the guts of GeoWatch_.  To install, follow the `installation`_ instructions.
+Welcome to the documentation for GeoWatch Util, the engine of GeoWatch_.  To install, follow the `installation`_ instructions.
 
 .. _geowatch: http://geowatch.io
 .. _installation: installation.html
@@ -31,7 +31,7 @@ GeoWatch supports multple channels and stores, including the following:
 1.  Apache Kafka - http://kafka.apache.org
 2.  AWS Kinesis - https://aws.amazon.com/kinesis/
 3.  AWS SNS - https://aws.amazon.com/sns/
-4.  AWS SQS - https://aws.amazon.com/sns/
+4.  AWS SQS - https://aws.amazon.com/sqs/
 5.  Slack - https://slack.com
 
 **Batch Stores**
@@ -43,7 +43,7 @@ GeoWatch supports multple channels and stores, including the following:
 
 If using Django, consider using geowatch-django, too.  GeoWatch Django provides a consistent way to provision geowatch objects based on Django settings.  Therefore, you don't need to create your own settings.
 
-Below is a list of simple patterns for provisioning consumers, producers, and stores by using the functions in `runtime.py`.  More complex provisioing routines can be executed by directly calling the respective factory.py functions `build_client`, `build_consumer`, `build_producer`, and `build_stores`.
+Below is a list of simple patterns for provisioning consumers, producers, and stores by using the functions in `runtime.py` (:mod:`geowatchutil.runtime`).  More complex provisioing routines can be executed by directly calling the respective factory.py functions `build_client`, `build_consumer`, `build_producer`, and `build_stores`.
 
 .. note::
 
@@ -59,10 +59,10 @@ Below is a list of simple patterns for provisioning consumers, producers, and st
  
 Or skip directly to the source code documenation.  Most public API functions are contained in :mod:`geowatchutil.runtime`.
 
-Key Concepts
+How does it work?
 ------------
 
-GeoWatch is built on top of the following key concepts: consumers, producers, stores, brokers, and codecs.
+GeoWatch is built on top of the following key concepts: consumers, producers, stores, brokers, codecs, and mappings.
 
 **Consumers**
 
@@ -99,6 +99,10 @@ Additionally, the GeoWatchBroker class can be extended to inject arbitray code d
 Codecs convert messages between external and internal data representations.  GeoWatch includes codecs for: plain text, JSON, GeoJSON, and WFS.
 
 For example, for JSON, `encode` calls json.dumps(data) and `decode` calls json.loads(data).
+
+**Mappings**
+
+Mappings convert application-specific objects into dicts/json that are suitable for messaging.  Templates are channel-specific, while mappings are for generic use (application <----> geowatch).  Therefore, only the base class is in the geowatch-util library.
 
 .. note::
     See GeoWatch in action on the examples_ page.

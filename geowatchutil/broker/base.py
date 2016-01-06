@@ -1,7 +1,14 @@
+"""
+Contains the base GeoWatchBroker class
+"""
 import time
 
 
 class GeoWatchBroker(object):
+    """
+    Base broker class.  This class can pass messages among consumers, producers, and stores.
+    If you wish to add more advanced logic, extend the class and overwrite the _pre and _post functions.
+    """
 
     verbose = False
     name = None
@@ -14,6 +21,7 @@ class GeoWatchBroker(object):
     timeout = 5
 
     # Filters
+    filter_metadata = None
     filter_last_one = False  # Filter messages to only last/latest message
 
     # Streaming Data
@@ -101,8 +109,23 @@ class GeoWatchBroker(object):
         return messages_out
 
     def _cycle_filter(self, messages=None):
+        if self.filter_metadata:
+            messages_filtered = []
+            for message in messages:
+                valid = True
+                if "metadata" in messages:
+                    for k in self.filter_metadata:
+                        if messages["metadata"][k] not in self.filter_metadata[k]:
+                            valid = False
+                            break
+
+                if valid:
+                    messages_filtered.append(message)
+        else:
+            messages_filtered = messages
+
         if self.filter_last_one:
-            messages = [messages[-1]]
+            messages_filtered = [messages_filtered[-1]]
 
         return messages
 
@@ -132,7 +155,7 @@ class GeoWatchBroker(object):
         for store in self.stores_out:
             store.close()
 
-    def __init__(self, name, description, consumers=None, producers=None, stores_in=None, stores_out=None, count=1, timeout=5, threads=1, sleep_period=5, deduplicate=False, filter_last_one=False, verbose=False):
+    def __init__(self, name, description, consumers=None, producers=None, stores_in=None, stores_out=None, count=1, timeout=5, threads=1, sleep_period=5, deduplicate=False, filter_metadata=None, filter_last_one=False, verbose=False):
         self.name = name
         self.description = description
         self.consumers = consumers
@@ -144,6 +167,7 @@ class GeoWatchBroker(object):
         self.threads = threads
         self.sleep_period = sleep_period
         self.deduplicate = deduplicate
+        self.filter_metadata = filter_metadata
         self.filter_last_one = filter_last_one
 
         self.verbose = verbose

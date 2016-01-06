@@ -18,7 +18,7 @@ def build_random_properties(count=2):
 def build_random_point(minx=-180.0, miny=-90.0, maxx=180.0, maxy=90.0):
     x = random.uniform(minx, maxx)
     y = random.uniform(miny, maxy)
-    return Point((x,y))
+    return Point((x, y))
 
 
 def build_random_feature():

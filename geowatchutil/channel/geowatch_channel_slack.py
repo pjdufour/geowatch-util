@@ -1,5 +1,6 @@
 import copy
 
+from geowatchutil.buffer.base import GeoWatchBuffer
 from geowatchutil.channel.base import GeoWatchChannelTopic, GeoWatchChannelError
 
 
@@ -9,6 +10,7 @@ class GeoWatchChannelSlack(GeoWatchChannelTopic):
     message_templates = None
 
     # Private
+    _buffer = None  # Used for temporarily caching messages locally since rtm returns all messages
 
     @classmethod
     def encode(self, message):
@@ -68,7 +70,10 @@ class GeoWatchChannelSlack(GeoWatchChannelTopic):
             return self._client._post(self._client.url_webhook, message)
 
     def get_messages_raw(self, count, block=True, timeout=5):
-        raise GeoWatchChannelError("GeoWatch only supports sending to Slack.  GeoWatch cannot get messages from Slack.")
+        if self._client:
+            return self._buffer.pop_messages(self._buffer.add_messages(self._client.rtm_read()), count=count)
+        else:
+            raise GeoWatchChannelError("Client has not been initialized for GeoWatch Slack channel")
 
     def __init__(self, client, topic, mode, num_procs=1, message_templates=None):
         super(GeoWatchChannelSlack, self).__init__(
@@ -77,3 +82,7 @@ class GeoWatchChannelSlack(GeoWatchChannelTopic):
             mode,
             num_procs=num_procs)
         self.message_templates = message_templates
+
+        if mode == "duplex" or mode == "consumer":
+            self._client.rtm_connect()
+            self._buffer = GeoWatchBuffer()

@@ -66,7 +66,6 @@ def provision_consumer(backend, **kwargs):
                     from geowatchutil.consumer.factory import build_consumer
                     consumer = build_consumer(client, codec, topic, **kwargs)
 
-
         #except:
         #    if verbose:
         #        print "Error in provision_consumer.  Could not get lock on GeoWatch server. Try "+str(tries)+"."
@@ -134,7 +133,7 @@ def provision_producer(backend, **kwargs):
                             client.wait_topic(topic, verbose=verbose)
                         except:
                             print "Waited for topic.  Topic was never created."
-                    
+
                     if client.check_topic_exists(topic, verbose=verbose):
                         from geowatchutil.producer.factory import build_producer
                         producer = build_producer(client, codec, topic)
@@ -209,7 +208,7 @@ def provision_store(backend, key, codec, **kwargs):
     return store
 
 
-def provision_brokers(watchlist, globalconfig=None, templates=None, actiontype=None, resourcetype=None, verbose=False):
+def provision_brokers(watchlist, globalconfig=None, templates=None, brokerfilter=None, verbose=False):
     """
     Provision new GeoWatch brokers.
 
@@ -218,7 +217,8 @@ def provision_brokers(watchlist, globalconfig=None, templates=None, actiontype=N
     ``globalconfig`` is a dict configuration for shared variables, such as AWS Region, AWS Credentials, etc.
     Fallback for missing broker-specific values.
 
-    If ``actiontype`` or resourcetype are non-None then they are used for filtering.
+    If ``brokerfilter`` are non-None then they are used for filtering the brokers against their message filters.
+    This is more efficient than initializing brokers that will never be used.
 
     :meth:`provision_brokers` returns a list of :class:`GeoWatchBroker` brokers.
 
@@ -240,7 +240,14 @@ def provision_brokers(watchlist, globalconfig=None, templates=None, actiontype=N
     brokers = []
     for w in watchlist:
         if w['enabled']:
-            if ((not actiontype) or (actiontype in w['action'])) and ((not resourcetype) or (resourcetype in w['resource'])):
+            valid = True
+            if brokerfilter and ('filter_metadata' in w):
+                for k in brokerfilter:
+                    if not ((k in w['filter_metadata']) and (brokerfilter[k] in w['filter_metadata'][k])):
+                        valid = False
+                        break
+
+            if valid:
                 b = provision_broker(w, globalconfig=globalconfig, templates=templates, verbose=verbose)
                 brokers.append(b)
     return brokers
@@ -273,7 +280,21 @@ def provision_broker(brokerconfig, globalconfig, templates=None, verbose=True):
     """
     from geowatchutil.broker.factory import build_broker
 
+    broker_kwargs = build_broker_kwargs(
+        brokerconfig,
+        globalconfig,
+        templates=templates,
+        verbose=verbose)
 
+    broker = build_broker(
+        brokerconfig.get('name', None),
+        brokerconfig.get('description', None),
+        **broker_kwargs)
+
+    return broker
+
+
+def build_broker_kwargs(brokerconfig, globalconfig, templates=None, verbose=False):
     consumers = []
     producers = []
     stores_out = []
@@ -307,17 +328,15 @@ def provision_broker(brokerconfig, globalconfig, templates=None, verbose=True):
                     ** c2['options'])
                 stores_out.append(store)
 
-    broker = build_broker(
-        brokerconfig['name'],
-        brokerconfig['description'],
-        count=brokerconfig.get('count', 1),
-        consumers=consumers,
-        producers=producers,
-        stores_out=stores_out,
-        deduplicate=False,
-        verbose=verbose)
-
-    return broker
+    return {
+        "filter_metadata": brokerconfig.get('filter_metadata', None),
+        "count": brokerconfig.get('count', 1),
+        "consumers": consumers,
+        "producers": producers,
+        "stores_out": stores_out,
+        "deduplicate": False,
+        "verbose": verbose
+    }
 
 
 def _build_geowatch_consumers(c, verbose=False):
