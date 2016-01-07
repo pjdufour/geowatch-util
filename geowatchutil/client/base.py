@@ -37,6 +37,10 @@ class GeoWatchClientWebHook(GeoWatchClient):
     authtoken = None
     url_webhook = None
 
+    # Private
+    _user_id = None
+    _user_name = None
+
     def _get(self, url):
         return urllib2.urlopen(url).read()
 
@@ -52,7 +56,7 @@ class GeoWatchClientWebHook(GeoWatchClient):
         super(GeoWatchClientWebHook, self).__init__(backend=backend, templates=templates)
         self.authtoken = authtoken
         self.url_webhook = url_webhook
-
+        self._user_id = None  # Set by slack to the user who has the authtoken.  Needed for bots.
 
 class GeoWatchClientStreaming(GeoWatchClient):
 

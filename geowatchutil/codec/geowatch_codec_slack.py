@@ -11,12 +11,12 @@ class GeoWatchCodecSlack(GeoWatchCodecJSON):
     .. _Slack: https://slack.com
     """
 
-    def render(self, message):
+    def render(self, message, t=None):
         """
         Render message for sending via channel
         """
-
-        t = self.find_template(message)
+        if not t:
+            t = self.find_template(message)
         if not t:
             raise GeoWatchError("GeoWatchCodecPlain.render: Could not find template.")
 
@@ -37,6 +37,7 @@ class GeoWatchCodecSlack(GeoWatchCodecJSON):
         """
         See: https://api.slack.com/docs/attachments
         """
+        print "message_attachement: ", a, message
 
         for k in ["title", "title_link", "fallback", "text", "thumb_url", "color"]:
             if k in a:

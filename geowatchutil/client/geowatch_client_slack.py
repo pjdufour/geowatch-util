@@ -122,3 +122,10 @@ class GeoWatchClientSlack(GeoWatchClientWebHook):
 
         if authtoken:
             self._client = SlackClient(authtoken)
+            d = None
+            try:
+                r = json.loads(self._client.api_call("auth.test"))
+                self._user_id = r[u'user_id']
+                self._user_name = r[u'user']
+            except:
+                print "Could not initialize Slack Client user"
