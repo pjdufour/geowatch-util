@@ -353,6 +353,7 @@ def _build_geowatch_consumers(c, verbose=False):
             topic_check=c.get('topic_check', None),
             client=client,
             codec=c['codec'],
+            authtoken=c.get('authtoken', None),
             topic_prefix=c.get('topic_prefix', None),
             aws_region=c.get('aws_region', None),
             aws_access_key_id=c.get('aws_access_key_id', None),

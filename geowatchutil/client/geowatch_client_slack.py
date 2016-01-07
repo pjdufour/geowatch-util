@@ -10,8 +10,10 @@ class GeoWatchClientSlack(GeoWatchClientWebHook):
     # Private
     url_api = "https://slack.com/api"
 
-    def check_channel_exists(self, channel, timeout=5, verbose=True):
+    def check_topic_exists(self, channel, timeout=5, verbose=True):
         exists = False
+
+        self.join_channel(channel, verbose=verbose)
 
         try:
             url = "{base}/channels.info?token={authtoken}&channel={channel}".format(
@@ -53,6 +55,13 @@ class GeoWatchClientSlack(GeoWatchClientWebHook):
                 print "Channel "+channel+" could not be created"
 
         return created
+
+    def join_channel(self, channel, verbose=True):
+        if verbose:
+            print "Joining channel "+channel
+        print "Bots currently can't join channels.  You need to invite manually with /invite @botname"
+        # https://github.com/slackhq/node-slack-client/issues/26
+        # self._client.api_call("channels.join", channel="channel")
 
     def archive_channel(self, channel, timeout=5, verbose=True):
         if not self.check_channel_exists(channel, timeout=timeout, verbose=verbose):

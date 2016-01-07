@@ -18,7 +18,7 @@ class GeoWatchChannelSlack(GeoWatchChannelTopic):
 
     @classmethod
     def decode(self, message):
-        raise GeoWatchChannelError("GeoWatch only supports sending to Slack.  GeoWatch cannot get messages from Slack.")
+        return message
 
     def _render_message_attachments(self, m, t):
         """
@@ -71,7 +71,8 @@ class GeoWatchChannelSlack(GeoWatchChannelTopic):
 
     def get_messages_raw(self, count, block=True, timeout=5):
         if self._client:
-            return self._buffer.pop_messages(self._buffer.add_messages(self._client.rtm_read()), count=count)
+            self._buffer.add_messages(self._client._client.rtm_read())
+            return self._buffer.pop_messages(count=count)
         else:
             raise GeoWatchChannelError("Client has not been initialized for GeoWatch Slack channel")
 
@@ -84,5 +85,5 @@ class GeoWatchChannelSlack(GeoWatchChannelTopic):
         self.message_templates = message_templates
 
         if mode == "duplex" or mode == "consumer":
-            self._client.rtm_connect()
+            self._client._client.rtm_connect()
             self._buffer = GeoWatchBuffer()

@@ -41,10 +41,10 @@ class GeoWatchConsumer(GeoWatchNode):
 
     def _receive_messages_plain_slack(self, response):
         messages = []
-        print "Response"
-        print response
-        #for item in response[u'Records']:
-        #    messages.append(self._codec.decode(item[u'Data']))
+        if response:
+            for item in response:
+                messages.append(self._codec.decode(item))
+        print "messages", messages
         return messages
 
     def _get_messages_raw(self, count, block=True, timeout=5):

@@ -15,7 +15,9 @@ class GeoWatchCodecJSON(GeoWatchCodec):
         """
         Decode message received via channel
         """
-        return json.loads(self.decode_channel(message))
+        m2 = self.decode_channel(message)
+        # Don't decode if already JSON, which can happen with sockets, such as Slack RTM
+        return json.loads(m2) if isinstance(m2, basestring) else m2 
 
     def pack(self, messages, which="all", which_index=0):
         """

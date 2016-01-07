@@ -28,8 +28,8 @@ class GeoWatchBuffer(object):
     def get_messages(self):
         return self._messages
 
-    def pop_messages(self, count):
-        if count >= self.size():
+    def pop_messages(self, count=-1):
+        if count == -1 or count >= self.size():
             r = self._messages
             self.clear()
             return r
