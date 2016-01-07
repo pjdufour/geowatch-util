@@ -239,7 +239,7 @@ def provision_brokers(watchlist, globalconfig=None, templates=None, brokerfilter
 
     brokers = []
     for w in watchlist:
-        if w['enabled']:
+        if w.get('enabled', True):
             valid = True
             if brokerfilter and ('filter_metadata' in w):
                 for k in brokerfilter:
@@ -301,7 +301,7 @@ def build_broker_kwargs(brokerconfig, globalconfig, templates=None, verbose=Fals
 
     if 'consumers' in brokerconfig:
         for c in brokerconfig['consumers']:
-            if c['enabled']:
+            if c.get('enabled', True):
                 c2 = copy.deepcopy(c)
                 if globalconfig:
                     c2.update(globalconfig)
@@ -309,7 +309,7 @@ def build_broker_kwargs(brokerconfig, globalconfig, templates=None, verbose=Fals
 
     if 'producers' in brokerconfig:
         for c in brokerconfig['producers']:
-            if c['enabled']:
+            if c.get('enabled', True):
                 c2 = copy.deepcopy(c)
                 if globalconfig:
                     c2.update(globalconfig)
@@ -317,7 +317,7 @@ def build_broker_kwargs(brokerconfig, globalconfig, templates=None, verbose=Fals
 
     if 'stores_out' in brokerconfig:
         for c in brokerconfig['stores_out']:
-            if c['enabled']:
+            if c.get('enabled', True):
                 c2 = copy.deepcopy(c)
                 if globalconfig:
                     c2.update(globalconfig)
