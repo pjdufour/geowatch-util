@@ -36,3 +36,12 @@ class GeoWatchError(Exception):
 
     def __init__(self, * args, ** kwargs):
         super(GeoWatchError, self).__init__(self, * args, ** kwargs)
+
+
+class GeoWatchModeError(GeoWatchError):
+    """
+    Mode error used throughout GeoWatch.  Mode must be consumer, producer, or duplex
+    """
+
+    def __init__(self, * args, ** kwargs):
+        super(GeoWatchModeError, self).__init__(self, * args, ** kwargs)

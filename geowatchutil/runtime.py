@@ -4,87 +4,26 @@ Provides runtime functions.  These functions wrap factory functions with excepti
 import copy
 import time
 
+from geowatchutil.base import GeoWatchError, GeoWatchModeError
+
 
 def provision_consumer(backend, **kwargs):
-    """
-    Provision a new GeoWatch consumer.
-
-    ``backend`` is either: 'kafka', 'kinesis', 'sns', or 'sqs'.
-
-    If ``client=None`` in ``kwargs``, :meth:`provision_consumer` will create a client.
-
-    :meth:`provision_consumer` returns a tuple ``(client, consumer)``.
-
-    **Examples**
-
-    .. code-block:: python
-
-        from geowatchutil.runtime import provision_consumer
-
-        client, consumer = provision_consumer('kafka', host="localhost")
-
-        client, consumer = provision_consumer(
-            'kinesis',
-            aws_region=aws_region,
-            aws_access_key_id=aws_access_key_id,
-            aws_secret_access_key=aws_secret_access_key,
-            topic_prefix=topic_prefix)
-
-    """
-    consumer = None
-
-    verbose = kwargs.get('verbose', False)
-    max_tries = kwargs.get('max_tries', 12)
-    sleep_period = kwargs.get('sleep_period', 5)
-    client = kwargs.pop('client', None)
-    codec = kwargs.pop('codec', None)
-    topic = kwargs.pop('topic', None)
-    topic_check = kwargs.get('topic_check', True)  # Defaults to True
-
-    tries = 0
-    while tries < max_tries:
-        #try:
-        if 1 == 1:
-            if not client:
-                from geowatchutil.client.factory import build_client
-                client = build_client(backend, **kwargs)
-
-            if client:
-                if topic and topic_check:
-                    if not client.check_topic_exists(topic, verbose=verbose):
-                        client.create_topic(topic)
-                        try:
-                            client.wait_topic(topic, verbose=verbose)
-                        except:
-                            print "Waited for topic.  Topic was never created."
-
-                    if client.check_topic_exists(topic, verbose=verbose):
-                        from geowatchutil.consumer.factory import build_consumer
-                        consumer = build_consumer(client, codec, topic, **kwargs)
-
-                else:
-                    from geowatchutil.consumer.factory import build_consumer
-                    consumer = build_consumer(client, codec, topic, **kwargs)
-
-        #except:
-        #    if verbose:
-        #        print "Error in provision_consumer.  Could not get lock on GeoWatch server. Try "+str(tries)+"."
-        #    client = None
-        #    consumer = None
-
-        if consumer:
-            break
-
-        tries += 1
-        time.sleep(sleep_period)
-    return (client, consumer)
+    return provision_node(backend, "consumer", **kwargs)
 
 
 def provision_producer(backend, **kwargs):
-    """
-    Provision a new GeoWatch Producer.
+    return provision_node(backend, "producer", **kwargs)
 
-    ``backend`` is either: 'kafka', 'kinesis', 'sns', or 'sqs'.
+
+def provision_duplex(backend, **kwargs):
+    return provision_node(backend, "duplex", **kwargs)
+
+
+def provision_node(backend, mode, **kwargs):
+    """
+    Provision a new GeoWatch Node.
+
+    ``backend`` is either: 'kafka', 'kinesis', 'slack', 'sns', or 'sqs'.
 
     If ``client=None`` in ``kwargs``, :meth:`provision_producer` will create a client.
 
@@ -107,7 +46,10 @@ def provision_producer(backend, **kwargs):
 
     """
 
-    producer = None
+    if mode not in ["consumer", "producer", "duplex"]:
+        raise GeoWatchModeError("GeoWatch mode error in provision_node.")
+
+    node = None
 
     verbose = kwargs.get('verbose', False)
     max_tries = kwargs.get('max_tries', 12)
@@ -135,25 +77,19 @@ def provision_producer(backend, **kwargs):
                             print "Waited for topic.  Topic was never created."
 
                     if client.check_topic_exists(topic, verbose=verbose):
-                        from geowatchutil.producer.factory import build_producer
-                        producer = build_producer(client, codec, topic)
+                        from geowatchutil.node.factory import build_node
+                        node = build_node(client, node, codec, topic, **kwargs)
 
                 else:
-                    from geowatchutil.producer.factory import build_producer
-                    producer = build_producer(client, codec, topic)
+                    from geowatchutil.node.factory import build_node
+                    node = build_node(client, node, codec, topic, **kwargs)
 
-        #except:
-        #    if verbose:
-        #        print "Error in provision_producer.  Could not get lock on GeoWatch server. Try "+str(tries)+"."
-        #    client = None
-        #    producer = None
-
-        if producer:
+        if node:
             break
 
         tries += 1
         time.sleep(sleep_period)
-    return (client, producer)
+    return (client, node)
 
 
 def provision_store(backend, key, codec, **kwargs):
@@ -212,8 +148,8 @@ def provision_brokers(watchlist, globalconfig=None, templates=None, brokerfilter
     """
     Provision new GeoWatch brokers.
 
-    ``watchlist`` is a list of broker dict configurations.
 
+    ``watchlist`` is a list of broker dict configurations.
     ``globalconfig`` is a dict configuration for shared variables, such as AWS Region, AWS Credentials, etc.
     Fallback for missing broker-specific values.
 
@@ -297,6 +233,7 @@ def provision_broker(brokerconfig, globalconfig, templates=None, verbose=True):
 def build_broker_kwargs(brokerconfig, globalconfig, templates=None, verbose=False):
     consumers = []
     producers = []
+    duplex = []
     stores_out = []
 
     if 'consumers' in brokerconfig:
@@ -305,7 +242,7 @@ def build_broker_kwargs(brokerconfig, globalconfig, templates=None, verbose=Fals
                 c2 = copy.deepcopy(c)
                 if globalconfig:
                     c2.update(globalconfig)
-                consumers.extend(_build_geowatch_consumers(c2, verbose=verbose))
+                consumers.extend(_provision_geowatch_nodes("consumer", c2, verbose=verbose))
 
     if 'producers' in brokerconfig:
         for c in brokerconfig['producers']:
@@ -313,7 +250,15 @@ def build_broker_kwargs(brokerconfig, globalconfig, templates=None, verbose=Fals
                 c2 = copy.deepcopy(c)
                 if globalconfig:
                     c2.update(globalconfig)
-                producers.extend(_build_geowatch_producers(c2, templates=templates, verbose=verbose))
+                producers.extend(_provision_geowatch_nodes("producer", c2, templates=templates, verbose=verbose))
+
+    if 'duplex' in brokerconfig:
+        for c in brokerconfig['duplex']:
+            if c.get('enabled', True):
+                c2 = copy.deepcopy(c)
+                if globalconfig:
+                    c2.update(globalconfig)
+                duplex.extend(_provision_geowatch_nodes("duplex", c2, templates=templates, verbose=verbose))
 
     if 'stores_out' in brokerconfig:
         for c in brokerconfig['stores_out']:
@@ -339,51 +284,35 @@ def build_broker_kwargs(brokerconfig, globalconfig, templates=None, verbose=Fals
     }
 
 
-def _build_geowatch_consumers(c, verbose=False):
+def _provision_geowatch_nodes(mode, c, templates=None, verbose=False):
     """
-    Builds and returns list of consumers based on config `c`.
+    Builds and returns list of nodes based on config `c`.
     """
-    consumers = []
+    nodes = []
     topics = c['topics'] if ('topics' in c) else ([c['topic']] if ('topic' in c) else [])
     client = None
-    for topic in topics:
-        client, consumer = provision_consumer(
-            c['backend'],
-            topic=topic,
-            topic_check=c.get('topic_check', None),
-            client=client,
-            codec=c['codec'],
-            authtoken=c.get('authtoken', None),
-            topic_prefix=c.get('topic_prefix', None),
-            aws_region=c.get('aws_region', None),
-            aws_access_key_id=c.get('aws_access_key_id', None),
-            aws_secret_access_key=c.get('aws_secret_access_key', None),
-            verbose=verbose)
-        consumers.append(consumer)
-    return consumers
+    kwargs = {
+        "topic": topic,
+        "topic_check": c.get('topic_check', None),
+        "client": client,
+        "codec": c['codec'],
+        "authtoken": c.get('authtoken', None),
+        "topic_prefix": c.get('topic_prefix', None),
+        "aws_region": c.get('aws_region', None),
+        "aws_access_key_id": c.get('aws_access_key_id', None),
+        "aws_secret_access_key": c.get('aws_secret_access_key', None),
+        "verbose": verbose
+    }
 
+    if mode == "producer" or mode =="duplex":
+        kwargs.update({
+            "templates": (getattr(templates, c['templates'], None) if ('templates' in c) else None),
+            "url_webhook": c.get('url_webhook', None)
+        })
 
-def _build_geowatch_producers(c, templates=None, verbose=False):
-    """
-    Builds and returns list of producers based on config `c`.
-    """
-    producers = []
-    topics = c['topics'] if ('topics' in c) else ([c['topic']] if ('topic' in c) else [])
-    client = None
     for topic in topics:
-        client, producer = provision_producer(
-            c['backend'],
-            topic=topic,
-            topic_check=c.get('topic_check', None),
-            client=client,
-            codec=c['codec'],
-            templates=(getattr(templates, c['templates'], None) if ('templates' in c) else None),
-            url_webhook=c.get('url_webhook', None),
-            authtoken=c.get('authtoken', None),
-            topic_prefix=c.get('topic_prefix', None),
-            aws_region=c.get('aws_region', None),
-            aws_access_key_id=c.get('aws_access_key_id', None),
-            aws_secret_access_key=c.get('aws_secret_access_key', None),
-            verbose=verbose)
-        producers.append(producer)
-    return producers
+        kwargs.update({'topic': topic})
+        client, node = provision_node(c['backend'], mode, **kwargs)
+        nodes.append(node)
+
+    return nodes

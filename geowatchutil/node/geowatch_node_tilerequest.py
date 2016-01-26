@@ -1,9 +1,10 @@
 from geowatchutil.base import parse_date, is_expired
-from geowatchutil.consumer.base import GeoWatchConsumer, assert_now
+from geowatchutil.node.base import GeoWatchNodeDuplex, assert_now
 
 
-class GeoWatchConsumerTileRequest(GeoWatchConsumer):
+class GeoWatchNodeTileRequest(GeoWatchNodeDuplex):
 
+    # Consumer Functions
     def get_messages(self, count, block=True, timeout=5, ttl=60, now=None):
         now = assert_now(now)
         response = self._get_messages_raw(count, block=block, timeout=timeout)
@@ -48,9 +49,16 @@ class GeoWatchConsumerTileRequest(GeoWatchConsumer):
 
         return messages_decoded
 
-    def __init__(self, client, topic, num_procs=1, group=None, shard_id=u'shardId-000000000000', shard_it_type='LATEST'):
-        super(GeoWatchConsumerTileRequest, self).__init__(
+    # Producer Functions
+    def send_tile_requests(self, tilesource, tiles, extension='png', now=None):
+        now = assert_now(now)
+        messages_encoded = self._codec.encode(tilesource=tilesource, tiles=tiles, extension=extension, now=now)
+        return self.send_messages(messages_encoded)
+
+    def __init__(self, client, mode, topic, num_procs=1, group=None, shard_id=u'shardId-000000000000', shard_it_type='LATEST'):
+        super(GeoWatchNodeTileRequest, self).__init__(
             client,
+            mode,
             "tilerequest",
             topic,
             num_procs=num_procs,

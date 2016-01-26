@@ -24,11 +24,12 @@ class GeoWatchBroker(object):
     filter_metadata = None
     filter_last_one = False  # Filter messages to only last/latest message
 
-    # Streaming Data
+    # Streaming
     consumers = None
     producers = None
+    duplex = None
 
-    # Batch Storage
+    # Batch
     stores_in = None
     stores_out = None
 
@@ -85,12 +86,13 @@ class GeoWatchBroker(object):
             if self.verbose:
                 print "Receiving messages from "+str(len(self.consumers))+" consumers."
             for consumer in self.consumers:
-                left = self.count - len(messages_all)
-                if left > 0:
-                    messages = consumer.get_messages(left, timeout=self.timeout)
-                    # Returns messages encoded, such as list of strings, dicts/json, etc.
-                    if messages:
-                        messages_all.extend(messages)
+                messages_all = self.cycle_in_consumer(consumer, messages_all)
+
+        if self.duplex:
+            if self.verbose:
+                print "Receiving messages from "+str(len(self.consumers))+" duplex nodes."
+            for consumer in self.duplex:
+                messages_all = self.cycle_in_consumer(consumer, messages_all)
 
         if self.verbose:
             print "Processing "+str(len(messages_all))+" messages."
@@ -107,6 +109,15 @@ class GeoWatchBroker(object):
             messages_out = messages_all
 
         return messages_out
+
+    def cycle_in_consumer(self, consumer, messages_all)
+        left = self.count - len(messages_all)
+        if left > 0:
+            messages = consumer.get_messages(left, timeout=self.timeout)
+            # Returns messages encoded, such as list of strings, dicts/json, etc.
+            if messages:
+                messages_all.extend(messages)
+        return messages_all
 
     def _cycle_filter(self, messages=None):
         if self.filter_metadata:
@@ -134,6 +145,9 @@ class GeoWatchBroker(object):
             if self.producers:
                 for producer in self.producers:
                     producer.send_messages(messages)
+            if self.duplex:
+                for producer in self.duplex:
+                    producer.send_messages(messages)
             if self.stores_out:
                 for store in self.stores_out:
                     store.write_messages(messages, flush=True)
@@ -148,6 +162,10 @@ class GeoWatchBroker(object):
         if self.producers:
             for producer in self.producers:
                 producer.delete_topic()
+        if self.duplex:
+            for node in self.duplex:
+                node.delete_topic()
+
 
     def close(self):
         for producer in self.producers:
@@ -155,11 +173,12 @@ class GeoWatchBroker(object):
         for store in self.stores_out:
             store.close()
 
-    def __init__(self, name, description, consumers=None, producers=None, stores_in=None, stores_out=None, count=1, timeout=5, threads=1, sleep_period=5, deduplicate=False, filter_metadata=None, filter_last_one=False, verbose=False):
+    def __init__(self, name, description, consumers=None, producers=None, duplex=None, stores_in=None, stores_out=None, count=1, timeout=5, threads=1, sleep_period=5, deduplicate=False, filter_metadata=None, filter_last_one=False, verbose=False):
         self.name = name
         self.description = description
         self.consumers = consumers
         self.producers = producers
+        self.duplex = duplex
         self.stores_in = stores_in
         self.stores_out = stores_out
         self.count = count
