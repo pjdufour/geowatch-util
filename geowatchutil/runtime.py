@@ -45,18 +45,20 @@ def provision_node(backend, mode, **kwargs):
             topic_prefix=topic_prefix)
 
     """
+    print "provision_node"
 
     if mode not in ["consumer", "producer", "duplex"]:
         raise GeoWatchModeError("GeoWatch mode error in provision_node.")
 
     node = None
 
+    client = kwargs.pop('client', None)
+    topic = kwargs.pop('topic', None)
+    codec = kwargs.pop('codec', None)
+
     verbose = kwargs.get('verbose', False)
-    max_tries = kwargs.get('max_tries', 12)
+    max_tries = kwargs.get('max_tries', 3)
     sleep_period = kwargs.get('sleep_period', 5)
-    client = kwargs.get('client', None)
-    codec = kwargs.get('codec', None)
-    topic = kwargs.get('topic', None)
     topic_check = kwargs.get('topic_check', True)  # Defaults to True
 
     tries = 0
@@ -78,16 +80,17 @@ def provision_node(backend, mode, **kwargs):
 
                     if client.check_topic_exists(topic, verbose=verbose):
                         from geowatchutil.node.factory import build_node
-                        node = build_node(client, node, codec, topic, **kwargs)
+                        node = build_node(client, mode, codec, topic, **kwargs)
 
                 else:
                     from geowatchutil.node.factory import build_node
-                    node = build_node(client, node, codec, topic, **kwargs)
+                    node = build_node(client, mode, codec, topic, **kwargs)
 
         if node:
             break
 
         tries += 1
+        print "Tried to initialize node.  Try ", tries, ".  Trying again.."
         time.sleep(sleep_period)
     return (client, node)
 
@@ -278,6 +281,7 @@ def build_broker_kwargs(brokerconfig, globalconfig, templates=None, verbose=Fals
         "count": brokerconfig.get('count', 1),
         "consumers": consumers,
         "producers": producers,
+        "duplex": duplex,
         "stores_out": stores_out,
         "deduplicate": False,
         "verbose": verbose
@@ -292,7 +296,6 @@ def _provision_geowatch_nodes(mode, c, templates=None, verbose=False):
     topics = c['topics'] if ('topics' in c) else ([c['topic']] if ('topic' in c) else [])
     client = None
     kwargs = {
-        "topic": topic,
         "topic_check": c.get('topic_check', None),
         "client": client,
         "codec": c['codec'],
@@ -306,7 +309,7 @@ def _provision_geowatch_nodes(mode, c, templates=None, verbose=False):
 
     if mode == "producer" or mode =="duplex":
         kwargs.update({
-            "templates": (getattr(templates, c['templates'], None) if ('templates' in c) else None),
+            "templates": (templates.get(c['templates'], None) if ('templates' in c) else None),
             "url_webhook": c.get('url_webhook', None)
         })
 

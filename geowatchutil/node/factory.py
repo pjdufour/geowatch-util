@@ -1,10 +1,16 @@
+from geowatchutil.base import GeoWatchError, GeoWatchModeError
 from geowatchutil.node.base import GeoWatchNodeDuplex
 from geowatchutil.node.geowatch_node_tilerequest import GeoWatchNodeTileRequest
 
 
 def build_node(client, mode, codec, topic, **kwargs):
+
+    if mode not in ["consumer", "producer", "duplex"]:
+        raise GeoWatchModeError("GeoWatch mode error in build_node.")
+
     node = None
     codec_lc = codec.lower()
+
     if mode == "producer":
         if codec_lc == "tile_request" or codec_lc == "geowatchcodectilerequest":
             node = GeoWatchNodeTileRequest(client, mode, topic)

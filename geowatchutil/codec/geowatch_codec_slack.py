@@ -20,6 +20,8 @@ class GeoWatchCodecSlack(GeoWatchCodecJSON):
         if not t:
             raise GeoWatchError("GeoWatchCodecPlain.render: Could not find template.")
 
+        # print "Template: ", t
+
         data = message['data'] if 'metadata' in message else message
         m2 = None
 
@@ -31,7 +33,8 @@ class GeoWatchCodecSlack(GeoWatchCodecJSON):
         else:
             m2 = self._render_message_plain(t, data)
 
-        return super(GeoWatchCodecSlack, self).encode(m2)  # self.encode_channel(json.dumps(message))
+        #return super(GeoWatchCodecSlack, self).encode(m2)  # self.encode_channel(json.dumps(message))
+        return self.encode_channel(m2)  # Don't call super, b/c need to keep as dict rather than dumping to text
 
     def _render_message_attachment(self, a, message):
         """
@@ -73,7 +76,7 @@ class GeoWatchCodecSlack(GeoWatchCodecJSON):
 
         return message_encoded
 
-    def encode(self, message):
+    def encode(self, message, **kwargs):
         """
         Encode message to send via channel
 
@@ -81,7 +84,7 @@ class GeoWatchCodecSlack(GeoWatchCodecJSON):
 
             :mod:GeoWatchCodecSlack cannot encode messages.
         """
-        raise GeoWatchError("Cannot encode slack messages.  Use render instead, which should happen automatically when given templates.")
+        return message  # Using RTM API, so keep as JSON
 
     def decode(self, message):
         """
@@ -91,7 +94,7 @@ class GeoWatchCodecSlack(GeoWatchCodecJSON):
 
             :mod:GeoWatchCodecSlack cannot decode messages.
         """
-        raise GeoWatchError("Cannot decode slack messages.")
+        return super(GeoWatchCodecSlack, self).decode(message)
 
     def pack(self, messages, which="all", which_index=0):
         """

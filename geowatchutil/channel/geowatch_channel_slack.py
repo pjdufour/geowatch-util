@@ -1,4 +1,5 @@
 import copy
+import json
 
 from geowatchutil.buffer.base import GeoWatchBuffer
 from geowatchutil.channel.base import GeoWatchChannelTopic, GeoWatchChannelError
@@ -62,16 +63,25 @@ class GeoWatchChannelSlack(GeoWatchChannelTopic):
 
         return r
 
-    def send_message(self, message):
+    def send_message(self, message, **kwargs):
         if self._client.authtoken:
-            return self._client._client.api_call("chat.postMessage", **message)
+            # https://api.slack.com/methods/chat.postMessage
+            return self._client._client.api_call(
+                "chat.postMessage",
+                channel="#"+kwargs.pop('topic', self.topic),
+                attachments=json.dumps(message["attachments"]))
         else:
             return self._client._post(self._client.url_webhook, message)
 
-    def send_messages(self, messages):
+    def send_messages(self, messages, **kwargs):
         if self._client.authtoken:
+            topic = kwargs.pop('topic', self.topic)
             for message in messages:
-                return self._client._client.api_call("chat.postMessage", **message)
+                # https://api.slack.com/methods/chat.postMessage
+                return self._client._client.api_call(
+                    "chat.postMessage",
+                    channel="#"+topic,
+                    attachments=json.dumps(message["attachments"]))
         else:
             for message in messages:
                 return self._client._post(self._client.url_webhook, message)

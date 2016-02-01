@@ -48,7 +48,7 @@ class GeoWatchBroker(object):
     def _post(self, messages=None):
         pass
 
-    def run(self, max_cycle=0):
+    def run(self, max_cycle=0, run_cycle_out=True):
         cycle = 1
         while True:
             if self.verbose:
@@ -60,7 +60,8 @@ class GeoWatchBroker(object):
 
             messages = self._cycle_filter(messages)
 
-            self._cycle_out(messages=messages)
+            if run_cycle_out:
+                self._cycle_out(messages=messages)
 
             self._post(messages=messages)
 
@@ -110,7 +111,7 @@ class GeoWatchBroker(object):
 
         return messages_out
 
-    def cycle_in_consumer(self, consumer, messages_all)
+    def cycle_in_consumer(self, consumer, messages_all):
         left = self.count - len(messages_all)
         if left > 0:
             messages = consumer.get_messages(left, timeout=self.timeout)
