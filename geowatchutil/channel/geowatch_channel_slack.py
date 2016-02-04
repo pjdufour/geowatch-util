@@ -68,19 +68,19 @@ class GeoWatchChannelSlack(GeoWatchChannelTopic):
             # https://api.slack.com/methods/chat.postMessage
             return self._client._client.api_call(
                 "chat.postMessage",
-                channel="#"+kwargs.pop('topic', self.topic),
+                channel=kwargs.pop('topic', '#'+self.topic),
                 attachments=json.dumps(message["attachments"]))
         else:
             return self._client._post(self._client.url_webhook, message)
 
     def send_messages(self, messages, **kwargs):
         if self._client.authtoken:
-            topic = kwargs.pop('topic', self.topic)
+            topic = kwargs.pop('topic', '#'+self.topic)
             for message in messages:
                 # https://api.slack.com/methods/chat.postMessage
                 return self._client._client.api_call(
                     "chat.postMessage",
-                    channel="#"+topic,
+                    channel=topic,
                     attachments=json.dumps(message["attachments"]))
         else:
             for message in messages:
