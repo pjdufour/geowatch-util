@@ -22,8 +22,8 @@ setup(
         "geowatchutil.channel",
         "geowatchutil.client",
         "geowatchutil.codec",
-        "geowatchutil.consumer",
-        "geowatchutil.producer",
+        "geowatchutil.mapping",
+        "geowatchutil.node",
         "geowatchutil.store",
         "geowatchutil.tests"],
     classifiers = [
