@@ -4,7 +4,7 @@ def build_client_file(path):
 
 
 def build_client_http(topic_prefix, url_source, url_max, auth_user, auth_password):
-    from geowatchutil.client.htpp import GeoWatchClientHTTP
+    from geowatchutil.client.geowatch_client_http import GeoWatchClientHTTP
     return GeoWatchClientHTTP(
         topic_prefix=topic_prefix,
         url_source=url_source,
