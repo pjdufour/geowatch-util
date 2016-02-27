@@ -13,7 +13,6 @@ class GeoWatchClientHTTP(GeoWatchClientTopic):
         """
         Prepares a request from a url, params, and optionally authentication.
         """
-        print "Data: ", data
 
         import urllib
         import urllib2
@@ -23,6 +22,8 @@ class GeoWatchClientHTTP(GeoWatchClientTopic):
 
         if params:
             url = url + '?' + urllib.urlencode(params)
+
+        print "URL: ", url
 
         req = urllib2.Request(url, data=data)
 
