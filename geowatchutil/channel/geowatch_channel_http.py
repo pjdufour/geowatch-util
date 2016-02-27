@@ -63,7 +63,7 @@ class GeoWatchChannelHTTP(GeoWatchChannelTopic):
         if self._it_id < max_it_id:
             for i in range(self._it_id, min(max_it_id+1, self._it_id + count)):
                 print "Requesting for ", i
-                request = self._client._make_request(params={'id': i, 'debug':'yes'}, contentType="text/xml")
+                request = self._client._make_request(params={'id': i}, contentType="text/xml")
                 if request.getcode() != 200:
                     raise Exception("Could not get augmented diff.")
                 response = request.read()
