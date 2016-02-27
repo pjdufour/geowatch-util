@@ -284,6 +284,7 @@ def build_broker_kwargs(brokerconfig, globalconfig, templates=None, verbose=Fals
         "duplex": duplex,
         "stores_out": stores_out,
         "deduplicate": False,
+        "sleep_period": brokerconfig.get('sleep_period', 5),
         "verbose": verbose
     }
 
