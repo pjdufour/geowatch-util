@@ -71,7 +71,7 @@ class GeoWatchChannelHTTP(GeoWatchChannelTopic):
         super(GeoWatchChannelHTTP, self).__init__(client, topic, mode, num_procs=num_procs)
         self.it_type = it_type
         if mode == "duplex" or mode == "consumer":
-            if it_type == "LATEST"
+            if it_type == "LATEST":
                 self._it_id = self.get_max_it_id(ignore_errors=False)
             else if it_type == "TRIM_HORIZON":
                 self._it_id = 0
