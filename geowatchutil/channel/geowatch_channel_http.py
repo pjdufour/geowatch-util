@@ -73,11 +73,11 @@ class GeoWatchChannelHTTP(GeoWatchChannelTopic):
         if mode == "duplex" or mode == "consumer":
             if it_type == "LATEST":
                 self._it_id = self.get_max_it_id(ignore_errors=False)
-            else if it_type == "TRIM_HORIZON":
+            elif it_type == "TRIM_HORIZON":
                 self._it_id = 0
-            else if it_type == "AT_SEQUENCE_NUMBER":
+            elif it_type == "AT_SEQUENCE_NUMBER":
                 self._it_id = it_id
-            else if it_type == "AFTER_SEQUENCE_NUMBER":
+            elif it_type == "AFTER_SEQUENCE_NUMBER":
                 self._it_id = it_id + 1
         else:
             self._it_id = 0
