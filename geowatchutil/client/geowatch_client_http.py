@@ -4,6 +4,7 @@ from geowatchutil.client.base import GeoWatchClientTopic
 class GeoWatchClientHTTP(GeoWatchClientTopic):
 
     url_source = ""
+    url_max = ""
     auth_user = None
     auth_password = None
     auth_b64 = None
@@ -66,15 +67,12 @@ class GeoWatchClientHTTP(GeoWatchClientTopic):
     def __init__(self, backend="http", topic_prefix="", url_source="", url_max="", auth_user="", auth_password=""):
         super(GeoWatchClientHTTP, self).__init__(backend=backend, topic_prefix=topic_prefix)
 
-        if url_source:
-            self.url_source = url_source
-            self.url_max = url_max
-            self.auth_user = auth_user
-            self.auth_password = auth_password
-            if self.auth_user and self.auth_password:
-                from base64 import b64encode
-                self.auth_b64 = b64encode(self.auth_user+":"+self.auth_password)
-            else:
-                self.auth_b64 = None
+        self.url_source = url_source
+        self.url_max = url_max
+        self.auth_user = auth_user
+        self.auth_password = auth_password
+        if self.auth_user and self.auth_password:
+            from base64 import b64encode
+            self.auth_b64 = b64encode(self.auth_user+":"+self.auth_password)
         else:
-            print "Could not create GeoWatch client for HTTP backend.  Missing parameters."
+            self.auth_b64 = None
