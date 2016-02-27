@@ -114,7 +114,18 @@ class GeoWatchNodeDuplex(GeoWatchNode):
     def close(self):
         self._channel.close()
 
-    def __init__(self, client, mode, codec, topic, num_procs=1, group=None, shard_id=u'shardId-000000000000', shard_it_type='LATEST'):
+    def __init__(
+        self,
+        client,
+        mode,
+        codec,
+        topic,
+        num_procs=1,
+        group=None,
+        it_id=0,
+        it_type='LATEST',
+        shard_id=u'shardId-000000000000',
+        shard_it_type='LATEST'):
         super(GeoWatchNodeDuplex, self).__init__(client, mode, codec, topic)
 
         self._channel = build_channel(
@@ -124,6 +135,8 @@ class GeoWatchNodeDuplex(GeoWatchNode):
             mode=mode,
             num_procs=num_procs,
             group=group,
+            it_id=it_id,
+            it_type=it_type,
             shard_id=shard_id,
             shard_it_type=shard_it_type)
 

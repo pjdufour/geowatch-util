@@ -6,3 +6,4 @@ kafka-python
 python-dateutil
 pymongo
 slackclient
+defusedxml

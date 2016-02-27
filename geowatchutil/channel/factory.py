@@ -1,4 +1,14 @@
-def build_channel(channel, client=None, topic=None, mode=None, num_procs=1, group=None, shard_id=u'shardId-000000000000', shard_it_type='LATEST'):
+def build_channel(
+    channel,
+    client=None,
+    topic=None,
+    mode=None,
+    num_procs=1,
+    group=None,
+    it_id=0,
+    it_type='LATEST',
+    shard_id=u'shardId-000000000000',
+    shard_it_type='LATEST'):
     """
     build_channel returns a GeoWatchChannel object based on the given well-known name
     """
@@ -6,6 +16,9 @@ def build_channel(channel, client=None, topic=None, mode=None, num_procs=1, grou
     if channel_lc == "file" or channel_lc == "geowatchchannelfile":
         from geowatchutil.channel.geowatch_channel_file import GeoWatchChannelFile
         return GeoWatchChannelFile(client, mode)
+    elif channel_lc == "http" or channel_lc == "geowatchchannelhttp":
+        from geowatchutil.channel.geowatch_channel_http import GeoWatchChannelHTTP
+        return GeoWatchChannelHTTP(client, topic, mode, it_id=it_id, it_type=it_type)
     elif channel_lc == "kafka" or channel_lc == "geowatchchannelkafka":
         from geowatchutil.channel.geowatch_channel_kafka import GeoWatchChannelKafka
         return GeoWatchChannelKafka(client, topic, mode, num_procs=num_procs, group=group)

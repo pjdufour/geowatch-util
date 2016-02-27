@@ -3,6 +3,16 @@ def build_client_file(path):
     return GeoWatchClientFile(path=path)
 
 
+def build_client_http(topic_prefix, url_source, url_max, auth_user, auth_password):
+    from geowatchutil.client.htpp import GeoWatchClientHTTP
+    return GeoWatchClientHTTP(
+        topic_prefix=topic_prefix,
+        url_source=url_source,
+        url_max=url_max,
+        auth_user=auth_user,
+        auth_password=auth_password)
+
+
 def build_client_kafka(host, topic_prefix):
     from geowatchutil.client.geowatch_client_kafka import GeoWatchClientKafka
     return GeoWatchClientKafka(host=host, topic_prefix=topic_prefix)
@@ -32,10 +42,11 @@ def build_client_slack(url_webhook, authtoken, templates):
     return GeoWatchClientSlack(url_webhook=url_webhook, authtoken=authtoken, templates=templates)
 
 
-def build_client_wfs(url_wfs, auth_user, auth_password):
+def build_client_wfs(topic_prefix, url_source, auth_user, auth_password):
     from geowatchutil.client.geowatch_client_wfs import GeoWatchClientWFS
     return GeoWatchClientWFS(
-        url_wfs=url_wfs,
+        topic_prefix=topic_prefix,
+        url_source=url_source,
         auth_user=auth_user,
         auth_password=auth_password)
 
@@ -47,6 +58,13 @@ def build_client(backend, **kwargs):
     client = None
     if backend == "file":
         client = build_client_file(kwargs.get('path', None))
+    elif backend == "http":
+        client = build_client_http(
+            kwargs.get('topic_prefix', None),
+            kwargs.get('url_source', None),
+            kwargs.get('url_max', None),
+            kwargs.get('auth_user', None),
+            kwargs.get('auth_password', None))
     elif backend == "kafka":
         client = build_client_kafka(kwargs.get('host', None), kwargs.get('topic_prefix', None))
     elif backend == "kinesis":
@@ -56,7 +74,11 @@ def build_client(backend, **kwargs):
             kwargs.get('aws_secret_access_key'),
             kwargs.get('topic_prefix'))
     elif backend == "wfs":
-        client = build_client_wfs(kwargs.get('url', None), kwargs.get('auth_user', None), kwargs.get('auth_password', None))
+        client = build_client_wfs(
+            kwargs.get('topic_prefix', None),
+            kwargs.get('url_source', None),
+            kwargs.get('auth_user', None),
+            kwargs.get('auth_password', None))
     elif backend == "sns":
         client = build_client_sns(
             kwargs.get('aws_region', None),
