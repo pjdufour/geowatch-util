@@ -64,10 +64,12 @@ class GeoWatchChannelHTTP(GeoWatchChannelTopic):
             for i in range(self._it_id, min(max_it_id+1, self._it_id + count)):
                 print "Requesting for ", i
                 request = self._client._make_request(params={'id': i}, contentType="text/xml")
-                if request.getcode() != 200:
-                    raise Exception("Could not get augmented diff.")
-                response = request.read()
-                messages_raw.append(response)
+                message = None
+                if request.getcode() == 200:
+                    message = request.getcode(), request.read()
+                else
+                    message = request.getcode(), None
+                messages_raw.append(message)
                 self._it_id = i + 1
 
         return messages_raw

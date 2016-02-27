@@ -62,7 +62,9 @@ class GeoWatchNodeDuplex(GeoWatchNode):
     # Consumer Functions
     def get_messages(self, count, block=True, timeout=5):
         response = self._get_messages_raw(count, block=block, timeout=timeout)
-        if self._client.backend == "kafka":
+        if self._client.backend == "http":
+            return self._receive_messages_plain_http(response)
+        elif self._client.backend == "kafka":
             return self._receive_messages_plain_kafka(response)
         elif self._client.backend == "kinesis":
             return self._receive_messages_plain_kinesis(response)
@@ -71,6 +73,14 @@ class GeoWatchNodeDuplex(GeoWatchNode):
 
     def _get_messages_raw(self, count, block=True, timeout=5):
         return self._channel.get_messages_raw(count, block=block, timeout=timeout)
+
+    def _receive_messages_plain_http(self, response):
+        messages = []
+        for item in response:
+            statuscode, message_raw = item
+            if message_raw:
+                messages.append(self._codec.decode(message_raw))
+        return messages
 
     def _receive_messages_plain_kafka(self, response):
         messages = []
