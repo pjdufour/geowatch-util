@@ -67,7 +67,7 @@ class GeoWatchChannelHTTP(GeoWatchChannelTopic):
                 message = None
                 if request.getcode() == 200:
                     message = request.getcode(), request.read()
-                else
+                else:
                     message = request.getcode(), None
                 messages_raw.append(message)
                 self._it_id = i + 1
