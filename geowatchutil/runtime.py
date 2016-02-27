@@ -307,6 +307,12 @@ def _provision_geowatch_nodes(mode, c, templates=None, verbose=False):
         "verbose": verbose
     }
 
+    if mode == "consumer" or mode=="duplex":
+        kwargs.update({
+            "url_source": c.get('url_source', None),
+            "url_max": c.get('url_max', None)
+        })
+
     if mode == "producer" or mode =="duplex":
         kwargs.update({
             "templates": (templates.get(c['templates'], None) if ('templates' in c) else None),
