@@ -30,21 +30,23 @@ class GeoWatchChannelHTTP(GeoWatchChannelTopic):
     def get_max_it_id(self, ignore_errors=True):
         max_it_id = -1
 
+        print "Making Request to ", self._client.url_max, " for max id"
+
         request = self._client._make_request(
             url=self._client.url_max,
             contentType="text/plain")
 
         if request.getcode() != 200:
-            if not ignore_errors:
-                raise Exception("Could not get augmented diff status.")
+            #if not ignore_errors:
+            raise Exception("Could not get augmented diff status.")
 
         response = request.read()
 
         try:
             max_it_id = int(response)
         except:
-            if not ignore_errors:
-                raise Exception("Could not parse augmented diff status.")
+            #if not ignore_errors:
+            raise Exception("Could not parse augmented diff status.")
 
         return max_it_id;
 
@@ -56,8 +58,11 @@ class GeoWatchChannelHTTP(GeoWatchChannelTopic):
         messages_raw = []
 
         max_it_id = self.get_max_it_id(ignore_errors=False)
+        print "it id: ", self._it_id
+        print "max it id: ", max_it_id
         if self._it_id < max_it_id:
             for i in range(self._it_id, min(max_it_id+1, self._it_id + count)):
+                print "Requesting for ", i
                 request = self._client._make_request(params={'id': i, 'debug':'yes'}, contentType="text/xml")
                 if request.getcode() != 200:
                     raise Exception("Could not get augmented diff.")
