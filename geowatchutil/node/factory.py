@@ -19,6 +19,8 @@ def build_node(client, mode, codec, topic, **kwargs):
     elif mode == "consumer" or mode == "duplex":
         num_procs = kwargs.get('num_procs', 1)
         group = kwargs.get('group', None)
+        it_id = kwargs.get('it_id', '0')
+        it_type = kwargs.get('it_type', 'LATEST')
         shard_id = kwargs.get('shard_id', 'shardId-000000000000')
         shard_it_type = kwargs.get('shard_it_type', 'LATEST')
         if codec_lc == "tile_request" or codec_lc == "geowatchcodectilerequest":
@@ -38,6 +40,8 @@ def build_node(client, mode, codec, topic, **kwargs):
                 topic,
                 num_procs=num_procs,
                 group=group,
+                it_id=it_id,
+                it_type=it_type,
                 shard_id=shard_id,
                 shard_it_type=shard_it_type)
     return node
