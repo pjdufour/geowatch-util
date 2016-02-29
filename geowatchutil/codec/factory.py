@@ -21,6 +21,9 @@ def build_codec(codec, channel=None, templates=None):
     elif codec_lc == "wfs" or codec_lc == "geowatchcodecwfs":
         from geowatchutil.codec.geowatch_codec_wfs import GeoWatchCodecWFS
         return GeoWatchCodecWFS(channel=channel)
+    elif codec_lc == "xml" or codec_lc == "geowatchcodecxml":
+        from geowatchutil.codec.geowatch_codec_xml import GeoWatchCodecXML
+        return GeoWatchCodecXML(channel=channel)
     else:
         from geowatchutil.codec.geowatch_codec_plain import GeoWatchCodecPlain
         return GeoWatchCodecPlain(channel=channel, templates=templates)
