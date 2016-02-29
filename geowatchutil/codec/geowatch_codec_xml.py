@@ -1,8 +1,10 @@
-from geowatchutil.codec.base import GeoWatchCodec
-
 import json
 
+from unidecode import unidecode
+
 import defusedxml.ElementTree as et
+
+from geowatchutil.codec.base import GeoWatchCodec
 
 class GeoWatchCodecXML(GeoWatchCodec):
 
@@ -18,7 +20,8 @@ class GeoWatchCodecXML(GeoWatchCodec):
         """
         m2 = self.decode_channel(message)
         # Don't decode if already JSON, which can happen with sockets, such as Slack RTM
-        return et.fromstring(m2) if isinstance(m2, basestring) else m2
+        m2_clean = unidecode(m2)
+        return et.fromstring(m2_clean) if isinstance(m2, basestring) else m2
 
     def pack(self, messages, which="all", which_index=0):
         """

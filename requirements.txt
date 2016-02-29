@@ -7,3 +7,4 @@ python-dateutil
 pymongo
 slackclient
 defusedxml
+unidecode
