@@ -311,7 +311,7 @@ def _provision_geowatch_nodes(mode, c, templates=None, verbose=False):
     if mode == "consumer" or mode=="duplex":
         kwargs.update({
             "url_source": c.get('url_source', None),
-            "url_max": c.get('url_max', None)
+            "url_max": c.get('url_max', None),
             'num_procs': c.get('num_procs', None),
             'group': c.get('group', None),
             'it_id': c.get('it_id', None),
