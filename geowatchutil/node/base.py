@@ -6,6 +6,7 @@ import datetime
 
 from geowatchutil.codec.factory import build_codec
 from geowatchutil.channel.factory import build_channel
+from geowatchutil.buffer.base import GeoWatchBuffer
 
 
 def assert_now(now):
