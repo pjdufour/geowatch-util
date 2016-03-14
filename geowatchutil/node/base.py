@@ -35,6 +35,7 @@ class GeoWatchNode(object):
     _client = None
     _codec = None
     _channel = None
+    _buffer_outgoing = None
 
     def delete_topic(self, timeout=5, verbose=False):
         return self._client.delete_topic(self.topic, timeout=timeout, verbose=verbose)
@@ -52,12 +53,15 @@ class GeoWatchNode(object):
         # Channel
         # Set by consumer/producer after GeoWatchNode.__init__
         self._channel = None
+        self._buffer_outgoing = None
 
 
 class GeoWatchNodeDuplex(GeoWatchNode):
 
     # Public
     num_procs = None
+    limit_outgoing = -1
+    overflow = 'keep'
 
     # Consumer Functions
     def get_messages(self, count, block=True, timeout=5):
@@ -119,7 +123,9 @@ class GeoWatchNodeDuplex(GeoWatchNode):
                 messages_encoded.append(self._codec.render(message))
             else:
                 messages_encoded.append(self._codec.encode(message, topic=self.topic))
-        return self._channel.send_messages(messages_encoded, **kwargs)
+        self._buffer_outgoing.add_messages(messages_encoded)
+        count = self._buffer_outgoing.limit if self._buffer_outgoing.limit else -1
+        return self._channel.send_messages(self._buffer.pop_messages(count=count), **kwargs)
 
     def close(self):
         self._channel.close()
@@ -135,8 +141,11 @@ class GeoWatchNodeDuplex(GeoWatchNode):
         it_id=0,
         it_type='LATEST',
         shard_id=u'shardId-000000000000',
-        shard_it_type='LATEST'):
+        shard_it_type='LATEST',
+        limit_outgoing=None):
         super(GeoWatchNodeDuplex, self).__init__(client, mode, codec, topic)
+
+        self._buffer_outgoing = GeoWatchBuffer(limit=limit_outgoing)
 
         self._channel = build_channel(
             self._client.backend,
