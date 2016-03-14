@@ -312,6 +312,12 @@ def _provision_geowatch_nodes(mode, c, templates=None, verbose=False):
         kwargs.update({
             "url_source": c.get('url_source', None),
             "url_max": c.get('url_max', None)
+            'num_procs': c.get('num_procs', None),
+            'group': c.get('group', None),
+            'it_id': c.get('it_id', None),
+            'it_type': c.get('it_type', None),
+            'shard_id': c.get('shard_id', None),
+            'shard_it_type': c.get('shard_it_type', None)
         })
 
     if mode == "producer" or mode =="duplex":
