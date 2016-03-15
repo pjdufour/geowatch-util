@@ -68,7 +68,7 @@ def provision_node(backend, mode, **kwargs):
         if 1 == 1:
             if not buffer_outgoing:
                 from geowatchutil.buffer.factory import build_buffer
-                buffer_outgoing = build_buffer(backend, **kwargs)
+                buffer_outgoing = build_buffer(**kwargs)
 
             if not client:
                 from geowatchutil.client.factory import build_client
