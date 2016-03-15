@@ -103,4 +103,4 @@ class GeoWatchChannelSlack(GeoWatchChannelTopic):
 
         if mode == "duplex" or mode == "consumer":
             self._client._client.rtm_connect()
-            self._buffer = GeoWatchBuffer()
+            self._buffer = GeoWatchBufferLocalMemory()

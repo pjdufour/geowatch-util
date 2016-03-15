@@ -1,4 +1,4 @@
-from geowatchutil.buffer.base import GeoWatchBuffer
+from geowatchutil.buffer.base import GeoWatchBufferLocalMemory
 from geowatchutil.codec.factory import build_codec
 
 
@@ -34,7 +34,7 @@ class GeoWatchStore(object):
     def __init__(self, backend, key, codec, which="all", which_index=0):
         self.backend = backend
         self.key = key
-        self._buffer = GeoWatchBuffer()
+        self._buffer = GeoWatchBufferLocalMemory()
         self._codec = build_codec(codec)  # takes in well-known codec name and returns object
         self.which = which
         self.which_index = which_index

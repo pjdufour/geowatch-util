@@ -55,6 +55,7 @@ def provision_node(backend, mode, **kwargs):
     client = kwargs.pop('client', None)
     topic = kwargs.pop('topic', None)
     codec = kwargs.pop('codec', None)
+    buffer_outgoing = kwargs.pop('buffer_outgoing', None)
 
     verbose = kwargs.get('verbose', False)
     max_tries = kwargs.get('max_tries', 3)
@@ -65,6 +66,10 @@ def provision_node(backend, mode, **kwargs):
     while tries < max_tries:
         #try:
         if 1 == 1:
+            if not buffer_outgoing:
+                from geowatchutil.buffer.factory import build_buffer
+                buffer_outgoing = build_buffer(backend, **kwargs)
+
             if not client:
                 from geowatchutil.client.factory import build_client
                 client = build_client(backend, **kwargs)

@@ -10,12 +10,22 @@ def build_node(client, mode, codec, topic, **kwargs):
 
     node = None
     codec_lc = codec.lower()
+    buffer_outgoing = kwargs.pop('buffer_outgoing', None)
 
     if mode == "producer":
         if codec_lc == "tile_request" or codec_lc == "geowatchcodectilerequest":
-            node = GeoWatchNodeTileRequest(client, mode, topic)
+            node = GeoWatchNodeTileRequest(
+                client,
+                mode,
+                topic,
+                buffer_outgoing=buffer_outgoing)
         else:
-            node = GeoWatchNodeDuplex(client, mode, codec, topic)
+            node = GeoWatchNodeDuplex(
+                client,
+                mode,
+                codec,
+                topic,
+                buffer_outgoing=buffer_outgoing)
     elif mode == "consumer" or mode == "duplex":
         num_procs = kwargs.get('num_procs', 1)
         group = kwargs.get('group', None)
@@ -31,7 +41,8 @@ def build_node(client, mode, codec, topic, **kwargs):
                 num_procs=num_procs,
                 group=group,
                 shard_id=shard_id,
-                shard_it_type=shard_it_type)
+                shard_it_type=shard_it_type,
+                buffer_outgoing=buffer_outgoing)
         else:
             node = GeoWatchNodeDuplex(
                 client,
@@ -43,5 +54,6 @@ def build_node(client, mode, codec, topic, **kwargs):
                 it_id=it_id,
                 it_type=it_type,
                 shard_id=shard_id,
-                shard_it_type=shard_it_type)
+                shard_it_type=shard_it_type,
+                buffer_outgoing=buffer_outgoing)
     return node

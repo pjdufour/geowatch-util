@@ -143,10 +143,12 @@ class GeoWatchNodeDuplex(GeoWatchNode):
         it_type='LATEST',
         shard_id=u'shardId-000000000000',
         shard_it_type='LATEST',
-        limit_outgoing=None):
+        limit_outgoing=None,
+        buffer_outgoing=None):
         super(GeoWatchNodeDuplex, self).__init__(client, mode, codec, topic)
 
-        self._buffer_outgoing = GeoWatchBuffer(limit=limit_outgoing)
+        if not buffer_outgoing:
+            self._buffer_outgoing = GeoWatchBufferLocalMemory(limit=limit_outgoing)
 
         self._channel = build_channel(
             self._client.backend,
