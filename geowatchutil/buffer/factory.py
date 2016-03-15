@@ -7,7 +7,7 @@ def build_buffer(**kwargs):
     b = None
 
     limit = kwargs.pop('limit_outgoing', None)
-    buffer_type = kwargs.pop('buffer_type', None)
+    buffer_type = kwargs.pop('buffer_type', 'localmemory')
     buffer_db_host = kwargs.pop('buffer_db_host', 'localhost')
     buffer_db_port = kwargs.pop('buffer_db_port', 27017)
     buffer_db_name = kwargs.pop('buffer_db_name', None)
