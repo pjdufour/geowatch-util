@@ -127,7 +127,7 @@ class GeoWatchBufferMongoDB(object):
         else:
             i = 0
             r = []
-            for x in self.collection.find()
+            for x in self.collection.find():
                 if i >= count:
                     break
                 r.append(x)
