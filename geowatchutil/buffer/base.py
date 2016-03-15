@@ -131,7 +131,7 @@ class GeoWatchBufferMongoDB(object):
                 if i >= count:
                     break
                 r.append(x)
-                i++
+                i += 1
             self.collection.delete_many({})  # Need to adjust so it doesn't delete everything
             return r
 
