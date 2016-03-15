@@ -1,7 +1,7 @@
 import copy
 import json
 
-from geowatchutil.buffer.base import GeoWatchBuffer
+from geowatchutil.buffer.base import GeoWatchBufferLocalMemory
 from geowatchutil.channel.base import GeoWatchChannelTopic, GeoWatchChannelError
 
 
