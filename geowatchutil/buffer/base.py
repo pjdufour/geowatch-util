@@ -44,7 +44,7 @@ class GeoWatchBuffer(object):
     def __exit__(self, *args, **kwargs):
         self.close()
 
-class GeoWatchBufferLocalMemory(object):
+class GeoWatchBufferLocalMemory(GeoWatchBuffer):
 
     # Private
     _messages = []
@@ -91,7 +91,7 @@ class GeoWatchBufferLocalMemory(object):
         check_limit=False):
         super(GeoWatchBufferLocalMemory, self).__init__(limit=limit, check_limit=check_limit)
 
-class GeoWatchBufferMongoDB(object):
+class GeoWatchBufferMongoDB(GeoWatchBuffer):
 
     # Public
     client = None
